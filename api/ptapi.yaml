@@ -1,0 +1,50 @@
+openapi: '3.0.1'
+info:
+  version: '0.1.0'
+  title: PTAPI
+  description: Payment Device API
+
+servers:
+  - url: http://localhost:8060
+
+security:
+  - BasicAuth: []
+
+paths:
+  /test:
+    get:
+      description: Returns OK
+      responses:
+        '200':
+          $ref: '#/components/responses/statusresponse'
+                                
+components:
+
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      
+  responses:
+    statusresponse:
+      description: status message with status code and message 
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/status'
+  schemas:
+    status:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Status code
+        message:
+          type: string
+          description: Status message
+
+
