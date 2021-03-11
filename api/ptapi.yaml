@@ -32,14 +32,14 @@ paths:
                   format: int64
                   example: 2790
               required:
-                - register_id
+                - amount
       responses:
         '200':
           description: response of successful authorisation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthoriseResponse'
+                $ref: '#/components/schemas/authorise_response'
 
 
         '400':
@@ -81,7 +81,8 @@ components:
           format: int32
           example: 1
         type:
-          type: string
+          type: integer
+          format: int32
           example: 0
         name:
           type: string
@@ -89,8 +90,35 @@ components:
         pan_ef_id:
           type: string
           example: '**** *** **** 5726'
+      required:
+        - name
+        - type
+        - pan_ef_id
+        - sequence_nr
 
-    AuthoriseResponse:
+    authorise_response:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "timeout"
+        result:
+          $ref: '#/components/schemas/authorise_result'
+        data:
+          $ref: '#/components/schemas/authorise_response_data'
+
+      required:
+        - error
+        - result
+    
+    authorise_result:
+      type: string
+      enum:
+        - 'success'
+        - 'timeout'
+        - 'abort'
+
+    authorise_response_data:
       type: object
       properties:
         amount:
@@ -107,8 +135,13 @@ components:
           type: string
           example: '100764992'
         receipt_nr:
-          type: string
-          example: '00/0022'
+          type: integer
+          format: int64
+          example: '0022'
+        turnover_nr:
+          type: integer
+          format: int64
+          example: '0022'
         card_tech:
           type: integer
           format: int32
@@ -121,5 +154,3 @@ components:
           example: 'CC0D7CBD9E02A2A'
         card:
           $ref: '#/components/schemas/card'
-       
-

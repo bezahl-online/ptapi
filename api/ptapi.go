@@ -44,7 +44,7 @@ func (a *API) Authorise(ctx echo.Context) error {
 	}
 	PT := zvt.PaymentTerminal
 	config := zvt.AuthConfig{
-		Amount: int(*request.Amount),
+		Amount: request.Amount,
 	}
 	// result := zvt.AuthResult{
 	// 	Success: true,
@@ -62,24 +62,34 @@ func (a *API) Authorise(ctx echo.Context) error {
 		return err
 	}
 	var response AuthoriseResponse = AuthoriseResponse{
-		Card: &Card{
-			Name:    &result.Card.Name,
-			PanEfId: &result.Card.PAN,
-			Type:    &result.Card.Type,
-		},
-		Amount:     request.Amount,
-		Aid:        new(string),
-		CardTech:   new(int32),
-		Crypto:     new(string),
-		ReceiptNr:  &result.ReceiptNr,
-		TerminalId: &result.TID,
+		Data:   nil,
+		Result: "",
 	}
-	*response.CardTech = int32(result.Card.Tech)
-	*response.Aid = "1000fake00000333"
-	err = ctx.JSON(http.StatusOK, response)
-	if err != nil {
-		return err
+	switch result.Result {
+	case zvt.Result_Success:
+		response.Result = AuthoriseResult_success
+		// response.Error = result.Erro  // FIXMEr
+		response.Data = &AuthoriseResponseData{
+			Aid:    new(string),
+			Amount: &result.Data.Amount,
+			Card: &Card{
+				Name:       result.Data.Card.Name,
+				PanEfId:    result.Data.Card.PAN,
+				SequenceNr: int32(result.Data.Card.SeqNr),
+				Type:       int32(result.Data.Card.Type),
+			},
+			CardTech:   new(int32),
+			Crypto:     new(string),
+			TerminalId: &result.Data.TID,
+			VuNr:       &result.Data.VU,
+		}
+		*response.Data.ReceiptNr = int64(result.Data.ReceiptNr)
+		*response.Data.Timestamp = result.Data.Date + " " + result.Data.Time
+
+	default:
+		response.Result = AuthoriseResult_abort
 	}
+	ctx.JSON(http.StatusOK, response)
 	return nil
 }
 
