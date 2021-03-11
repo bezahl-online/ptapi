@@ -1,5 +1,5 @@
 output:
-  gm65-server.gen.go
+  ptapi-server.gen.go
 generate:
   - server
   - spec

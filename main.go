@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"bezahl.online/ptapi/api"
+	"github.com/bezahl-online/ptapi/api"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )

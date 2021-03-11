@@ -7,8 +7,6 @@ info:
 servers:
   - url: http://localhost:8060
 
-security:
-  - BasicAuth: []
 
 paths:
   /test:
@@ -17,13 +15,40 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/statusresponse'
+          
+  /authorise:
+    post:
+      operationId: authorise
+      requestBody:
+        description: initiate payment
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  description: amount in cent
+                  type: integer
+                  format: int64
+                  example: 2790
+              required:
+                - register_id
+      responses:
+        '200':
+          description: response of successful authorisation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthoriseResponse'
+
+
+        '400':
+          $ref: '#/components/responses/statusresponse'
+
+          
                                 
 components:
 
-  securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
       
   responses:
     statusresponse:
@@ -32,6 +57,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/status'
+            
+          
   schemas:
     status:
       type: object
@@ -46,5 +73,53 @@ components:
         message:
           type: string
           description: Status message
+    card:
+      type: object
+      properties:
+        sequence_nr:
+          type: integer
+          format: int32
+          example: 1
+        type:
+          type: string
+          example: 0
+        name:
+          type: string
+          example: 0
+        pan_ef_id:
+          type: string
+          example: '**** *** **** 5726'
 
+    AuthoriseResponse:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int64
+          example: 2790
+        timestamp:
+          type: string
+          example: '20210310 094833'
+        terminal_id:
+          type: string
+          example: '29001006'
+        vuNr:
+          type: string
+          example: '100764992'
+        receipt_nr:
+          type: string
+          example: '00/0022'
+        card_tech:
+          type: integer
+          format: int32
+          example: 2
+        aid:
+          type: string
+          example: 'A0000000041010'
+        crypto:
+          type: string
+          example: 'CC0D7CBD9E02A2A'
+        card:
+          $ref: '#/components/schemas/card'
+       
 
