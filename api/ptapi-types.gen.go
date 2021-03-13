@@ -13,15 +13,15 @@ type AuthoriseResponse struct {
 // AuthoriseResponseData defines model for authorise_response_data.
 type AuthoriseResponseData struct {
 	Aid        *string `json:"aid,omitempty"`
-	Amount     *int64  `json:"amount,omitempty"`
-	Card       *Card   `json:"card,omitempty"`
+	Amount     int64   `json:"amount"`
+	Card       Card    `json:"card"`
 	CardTech   *int32  `json:"card_tech,omitempty"`
-	Crypto     *string `json:"crypto,omitempty"`
-	ReceiptNr  *int64  `json:"receipt_nr,omitempty"`
-	TerminalId *string `json:"terminal_id,omitempty"`
-	Timestamp  *string `json:"timestamp,omitempty"`
-	TurnoverNr *int64  `json:"turnover_nr,omitempty"`
-	VuNr       *string `json:"vuNr,omitempty"`
+	Crypto     string  `json:"crypto"`
+	ReceiptNr  int64   `json:"receipt_nr"`
+	TerminalId string  `json:"terminal_id"`
+	Timestamp  string  `json:"timestamp"`
+	TurnoverNr int64   `json:"turnover_nr"`
+	VuNr       string  `json:"vu_nr"`
 }
 
 // AuthoriseResult defines model for authorise_result.
@@ -42,6 +42,13 @@ type Card struct {
 	Type       int32  `json:"type"`
 }
 
+// CompletionResponse defines model for completion_response.
+type CompletionResponse struct {
+	Message     string             `json:"message"`
+	Status      int32              `json:"status"`
+	Transaction *AuthoriseResponse `json:"transaction,omitempty"`
+}
+
 // Status defines model for status.
 type Status struct {
 
@@ -59,8 +66,17 @@ type Statusresponse Status
 type AuthoriseJSONBody struct {
 
 	// amount in cent
-	Amount int64 `json:"amount"`
+	Amount      int64   `json:"amount"`
+	ReceiptCode *string `json:"receipt_code,omitempty"`
+}
+
+// AuthoriseCompletionJSONBody defines parameters for AuthoriseCompletion.
+type AuthoriseCompletionJSONBody struct {
+	ReceiptCode string `json:"receipt_code"`
 }
 
 // AuthoriseJSONRequestBody defines body for Authorise for application/json ContentType.
 type AuthoriseJSONRequestBody AuthoriseJSONBody
+
+// AuthoriseCompletionJSONRequestBody defines body for AuthoriseCompletion for application/json ContentType.
+type AuthoriseCompletionJSONRequestBody AuthoriseCompletionJSONBody

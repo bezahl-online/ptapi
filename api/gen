@@ -1,0 +1,1 @@
+oapi-codegen -config types.cfg.yaml ptapi.yaml ; oapi-codegen -config server.cfg.yaml ptapi.yaml

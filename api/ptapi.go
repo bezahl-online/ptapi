@@ -20,8 +20,8 @@ var e *echo.Echo = echo.New()
 
 func init() {
 	fmt.Println("init")
-	testServer := &API{}
-	RegisterHandlers(e, testServer)
+	server := &API{}
+	RegisterHandlers(e, server)
 	// go device.Connect(&scanner)
 }
 
@@ -35,10 +35,12 @@ func (a *API) GetTest(ctx echo.Context) error {
 	return nil
 }
 
-// Authorise returns status ok
+// Authorise initiates a payment tranaction given
+// a specific amount and receipt code
 func (a *API) Authorise(ctx echo.Context) error {
+	var err error
 	var request AuthoriseJSONRequestBody
-	err := ctx.Bind(&request)
+	err = ctx.Bind(&request)
 	if err != nil {
 		return err
 	}
@@ -46,51 +48,67 @@ func (a *API) Authorise(ctx echo.Context) error {
 	config := zvt.AuthConfig{
 		Amount: request.Amount,
 	}
-	// result := zvt.AuthResult{
-	// 	Success: true,
-	// 	Card: zvt.CardData{
-	// 		Name: "RalphCard",
-	// 		Type: "Nimmmit",
-	// 		PAN:  "1293871293578",
-	// 		Tech: 3,
-	// 	},
-	// 	ReceiptNr: "23412",
-	// 	TID:       "239487",
-	// }
-	result, err := PT.Authorisation(&config)
+	if err = PT.Authorisation(&config); err != nil {
+		return err
+	}
+	if err = SendStatus(ctx, http.StatusOK, "OK"); err != nil {
+		return err
+	}
+	return nil
+}
+
+// AuthoriseCompletion completes the payment transaction
+// and responses with the transaction's data
+func (a *API) AuthoriseCompletion(ctx echo.Context) error {
+	var request AuthoriseJSONRequestBody
+	err := ctx.Bind(&request)
 	if err != nil {
 		return err
 	}
-	var response AuthoriseResponse = AuthoriseResponse{
-		Data:   nil,
-		Result: "",
+	PT := zvt.PaymentTerminal
+	result, err := PT.Completion()
+	if err != nil {
+		return err
 	}
-	switch result.Result {
-	case zvt.Result_Success:
-		response.Result = AuthoriseResult_success
-		// response.Error = result.Erro  // FIXMEr
-		response.Data = &AuthoriseResponseData{
-			Aid:    new(string),
-			Amount: &result.Data.Amount,
-			Card: &Card{
-				Name:       result.Data.Card.Name,
-				PanEfId:    result.Data.Card.PAN,
-				SequenceNr: int32(result.Data.Card.SeqNr),
-				Type:       int32(result.Data.Card.Type),
-			},
-			CardTech:   new(int32),
-			Crypto:     new(string),
-			TerminalId: &result.Data.TID,
-			VuNr:       &result.Data.VU,
-		}
-		*response.Data.ReceiptNr = int64(result.Data.ReceiptNr)
-		*response.Data.Timestamp = result.Data.Date + " " + result.Data.Time
-
-	default:
-		response.Result = AuthoriseResult_abort
-	}
+	response := parseResult(result)
 	ctx.JSON(http.StatusOK, response)
 	return nil
+}
+
+func parseResult(result zvt.CompletionResponse) *CompletionResponse {
+	var response CompletionResponse = CompletionResponse{}
+	response.Status = int32(result.Status)
+	if len(result.Message) > 0 {
+		response.Message = result.Message
+	}
+	if result.Transaction != nil {
+		zvtT := *result.Transaction
+		response.Transaction = &AuthoriseResponse{}
+		t := AuthoriseResponse{}
+		switch zvtT.Result {
+		case zvt.Result_Success:
+			d := *zvtT.Data
+			t.Result = AuthoriseResult_success
+
+			t.Data = &AuthoriseResponseData{
+				Aid:        new(string),
+				Amount:     d.Amount,
+				Card:       Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
+				CardTech:   new(int32),
+				Crypto:     "",
+				ReceiptNr:  int64(d.ReceiptNr),
+				TerminalId: d.TID,
+				Timestamp:  d.Date + " " + d.Time,
+				TurnoverNr: int64(d.TurnoverNr),
+				VuNr:       d.VU,
+			}
+			*t.Data.CardTech = int32(d.Card.Tech)
+			response.Transaction = &t
+		default:
+			t.Result = AuthoriseResult_abort
+		}
+	}
+	return &response
 }
 
 // SendStatus function wraps sending of an error in the Error format, and

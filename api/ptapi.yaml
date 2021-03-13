@@ -20,12 +20,18 @@ paths:
     post:
       operationId: authorise
       requestBody:
-        description: initiate payment
+        description: >-
+          initiate payment; api is stateful and will manage 
+          and store intemediate messages from PT and log it 
+          to a database
         content:
           application/json:
             schema:
               type: object
               properties:
+                receipt_code:
+                  type: string
+                  example: "00012021012713032101"
                 amount:
                   description: amount in cent
                   type: integer
@@ -35,17 +41,64 @@ paths:
                 - amount
       responses:
         '200':
+          $ref: '#/components/responses/statusresponse'
+        '400':
+          $ref: '#/components/responses/statusresponse'
+          
+  # /poll_intermediate:
+  #    post:
+  #     operationId: Intermediate
+  #     requestBody:
+  #       description: >-
+  #         initiate payment; api is stateful and will manage 
+  #         and store intemediate messages from PT and log it 
+  #         to a database
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               receipt_code:
+  #                 type: string
+  #                 example: "00012021012713032101"
+  #     responses:
+  #       '200':
+  #         description: response of successful authorisation
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/authorise_response'
+  #       '400':
+  #         $ref: '#/components/responses/statusresponse'
+        
+  /authorise_completion:
+     post:
+      operationId: AuthoriseCompletion
+      requestBody:
+        description: >-
+          initiate payment; api is stateful and will manage 
+          and store intemediate messages from PT and log it 
+          to a database
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receipt_code:
+                  type: string
+                  example: "00012021012713032101"
+              required:
+                - receipt_code
+      responses:
+        '200':
           description: response of successful authorisation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/authorise_response'
-
-
+                $ref: '#/components/schemas/completion_response'
         '400':
           $ref: '#/components/responses/statusresponse'
-
-          
+        
                                 
 components:
 
@@ -73,6 +126,7 @@ components:
         message:
           type: string
           description: Status message
+
     card:
       type: object
       properties:
@@ -131,7 +185,7 @@ components:
         terminal_id:
           type: string
           example: '29001006'
-        vuNr:
+        vu_nr:
           type: string
           example: '100764992'
         receipt_nr:
@@ -154,3 +208,28 @@ components:
           example: 'CC0D7CBD9E02A2A'
         card:
           $ref: '#/components/schemas/card'
+      required:
+        - receipt_nr
+        - turnover_nr
+        - crypto
+        - card
+        - vu_nr
+        - terminal_id
+        - amount
+        - timestamp
+
+    completion_response:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 1
+        message:
+          type: string
+          example: 'please wait'
+        transaction:
+          $ref: '#/components/schemas/authorise_response'
+      required:
+        - status
+        - message
