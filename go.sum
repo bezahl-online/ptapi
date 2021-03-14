@@ -8,6 +8,16 @@ github.com/bezahl-online/zvt v0.0.0-20210313154105-048a1fdb23a4 h1:An35LKgjtlttZ
 github.com/bezahl-online/zvt v0.0.0-20210313154105-048a1fdb23a4/go.mod h1:mMjD0U9NsaGyWvwsf0E8OgAaZNPOm2ikb61Sp2AE4aI=
 github.com/bezahl-online/zvt v0.0.0-20210313172722-521276c76571 h1:VN61M7cVRLoCGQuU+MQZ1xbNsXAUrYzJyWiGfFvCSVA=
 github.com/bezahl-online/zvt v0.0.0-20210313172722-521276c76571/go.mod h1:mMjD0U9NsaGyWvwsf0E8OgAaZNPOm2ikb61Sp2AE4aI=
+github.com/bezahl-online/zvt v0.0.0-20210314111312-ed95442967c9 h1:htip7V14Ecjc1xQKvmiCCCPFvyyTi+L0hIXfZRQRIQA=
+github.com/bezahl-online/zvt v0.0.0-20210314111312-ed95442967c9/go.mod h1:mMjD0U9NsaGyWvwsf0E8OgAaZNPOm2ikb61Sp2AE4aI=
+github.com/bezahl-online/zvt v0.0.0-20210314120322-be0882ebb284 h1:re2KsrQ8rO/SaIFtCt37F5K7gdS2jSOsyQueWEkyass=
+github.com/bezahl-online/zvt v0.0.0-20210314120322-be0882ebb284/go.mod h1:mMjD0U9NsaGyWvwsf0E8OgAaZNPOm2ikb61Sp2AE4aI=
+github.com/bezahl-online/zvt v0.0.0-20210314122119-01e5f8ccc878 h1:gwvrwfvK20oIOahWUkM6lYZFLl41laoCQSGsZd5NuU4=
+github.com/bezahl-online/zvt v0.0.0-20210314122119-01e5f8ccc878/go.mod h1:mMjD0U9NsaGyWvwsf0E8OgAaZNPOm2ikb61Sp2AE4aI=
+github.com/bezahl-online/zvt v0.0.0-20210314134758-78b836d323ac h1:EUVpbVzx20gScKSjEITkbdhZHgtjpB8Cx7gnvNydguY=
+github.com/bezahl-online/zvt v0.0.0-20210314134758-78b836d323ac/go.mod h1:mMjD0U9NsaGyWvwsf0E8OgAaZNPOm2ikb61Sp2AE4aI=
+github.com/bezahl-online/zvt v0.0.0-20210314142139-c0fb070ed943 h1:W8XQJURvetx/OfqRS2N7pL/IYbmjocjTjC7mHwMn3ds=
+github.com/bezahl-online/zvt v0.0.0-20210314142139-c0fb070ed943/go.mod h1:mMjD0U9NsaGyWvwsf0E8OgAaZNPOm2ikb61Sp2AE4aI=
 github.com/cyberdelia/templates v0.0.0-20141128023046-ca7fffd4298c/go.mod h1:GyV+0YP4qX0UQ7r2MoYZ+AvYDp12OF5yg4q8rGnyNh4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

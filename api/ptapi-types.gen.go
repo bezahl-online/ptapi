@@ -30,6 +30,7 @@ type AuthoriseResult string
 // List of AuthoriseResult
 const (
 	AuthoriseResult_abort   AuthoriseResult = "abort"
+	AuthoriseResult_pending AuthoriseResult = "pending"
 	AuthoriseResult_success AuthoriseResult = "success"
 	AuthoriseResult_timeout AuthoriseResult = "timeout"
 )

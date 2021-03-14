@@ -31,7 +31,14 @@ func TestAuthoriseCompletion(t *testing.T) {
 		if assert.Equal(t, http.StatusOK, result.Code()) {
 			var response *CompletionResponse = &CompletionResponse{}
 			err := result.UnmarshalBodyToObject(&response)
-			fmt.Printf("%v\n", *response)
+			fmt.Printf("SEND response Status: %02X\n Message:'%s'\nResult: %s\nData:\n%+v\n", response.Status,
+				response.Message, (*response.Transaction).Result, (*response.Transaction).Data)
+			if response != nil &&
+				response.Transaction != nil &&
+				response.Transaction.Result == AuthoriseResult_abort ||
+				response.Transaction.Result == AuthoriseResult_success {
+				break
+			}
 			if assert.NoError(t, err) {
 			}
 		}
@@ -47,10 +54,10 @@ func TestParseResult(t *testing.T) {
 				Aid:    new(string),
 				Amount: 199,
 				Card: Card{
-					Name:       "",
+					Name:       "Mastercard",
 					PanEfId:    "",
-					SequenceNr: 0,
-					Type:       0,
+					SequenceNr: 444,
+					Type:       0x70,
 				},
 				CardTech:   new(int32),
 				Crypto:     "",
@@ -82,15 +89,15 @@ func TestParseResult(t *testing.T) {
 				VU:         "100003045",
 				AID:        "",
 				Card: zvt.CardData{
-					Name:  "",
-					Type:  0,
+					Name:  "Mastercard",
+					Type:  0x70,
 					PAN:   "",
 					Tech:  3,
-					SeqNr: 0,
+					SeqNr: 444,
 				},
 			},
 		},
 	}
 	got := parseResult(result)
-	assert.EqualValues(t, want, got)
+	assert.EqualValues(t, want, *got)
 }

@@ -83,7 +83,6 @@ func parseResult(result zvt.CompletionResponse) *CompletionResponse {
 	}
 	if result.Transaction != nil {
 		zvtT := *result.Transaction
-		response.Transaction = &AuthoriseResponse{}
 		t := AuthoriseResponse{}
 		switch zvtT.Result {
 		case zvt.Result_Success:
@@ -104,9 +103,14 @@ func parseResult(result zvt.CompletionResponse) *CompletionResponse {
 			}
 			*t.Data.CardTech = int32(d.Card.Tech)
 			response.Transaction = &t
-		default:
+		case zvt.Result_Abort:
 			t.Result = AuthoriseResult_abort
+		case zvt.Result_Pending:
+			t.Result = AuthoriseResult_pending
+		default:
+			t.Error = "no result"
 		}
+		response.Transaction = &t
 	}
 	return &response
 }
