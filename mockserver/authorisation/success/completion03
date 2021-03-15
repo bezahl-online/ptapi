@@ -1,0 +1,1 @@
+{"message":"","status":0,"transaction":{"data":{"aid":"","amount":1200,"card":{"name":"MAESTRO","pan_ef_id":"XXXX XXXX XXXX XXX4 281","sequence_nr":1,"type":46},"card_tech":0,"crypto":"","receipt_nr":64,"terminal_id":"29001006","timestamp":"0315 164019","turnover_nr":64,"vu_nr":"100764992"},"error":"","result":"pending"}}

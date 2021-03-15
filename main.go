@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/bezahl-online/ptapi/api"
+	"github.com/bezahl-online/ptapi/mockserver"
+	"github.com/bezahl-online/ptapi/param"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -22,8 +24,14 @@ func main() {
 	port := &serverPort
 	e := echo.New()
 	e.Use(middleware.CORS())
-	server := &api.API{}
 
+	var server api.ServerInterface
+	if len(*param.TestDir) > 0 {
+		fmt.Printf("starting in MOCK mode with test directory '%s'\n", *param.TestDir)
+		server = &mockserver.API{}
+	} else {
+		server = &api.API{}
+	}
 	api.RegisterHandlers(e, server)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf("0.0.0.0:%d", *port)))
