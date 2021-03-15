@@ -67,8 +67,8 @@ type Statusresponse Status
 type AuthoriseJSONBody struct {
 
 	// amount in cent
-	Amount      int64   `json:"amount"`
-	ReceiptCode *string `json:"receipt_code,omitempty"`
+	Amount      int64  `json:"amount"`
+	ReceiptCode string `json:"receipt_code"`
 }
 
 // AuthoriseCompletionJSONBody defines parameters for AuthoriseCompletion.

@@ -39,6 +39,7 @@ paths:
                   example: 2790
               required:
                 - amount
+                - receipt_code
       responses:
         '200':
           $ref: '#/components/responses/statusresponse'

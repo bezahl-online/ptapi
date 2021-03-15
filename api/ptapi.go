@@ -40,27 +40,31 @@ func (a *API) GetTest(ctx echo.Context) error {
 func (a *API) Authorise(ctx echo.Context) error {
 	var err error
 	var request AuthoriseJSONRequestBody
+	zvt.PaymentTerminal.Connect()
+	fmt.Println("Authorise incomming...")
 	err = ctx.Bind(&request)
 	if err != nil {
 		return err
 	}
-	PT := zvt.PaymentTerminal
-	config := zvt.AuthConfig{
+	err = zvt.PaymentTerminal.Authorisation(&zvt.AuthConfig{
 		Amount: request.Amount,
-	}
-	if err = PT.Authorisation(&config); err != nil {
+	})
+	if err != nil {
 		return err
 	}
-	if err = SendStatus(ctx, http.StatusOK, "OK"); err != nil {
+	err = SendStatus(ctx, http.StatusOK, "OK")
+	if err != nil {
 		return err
 	}
+	fmt.Printf("Authorise amount %d for receipt '%s' OK\n", request.Amount, request.ReceiptCode)
 	return nil
 }
 
 // AuthoriseCompletion completes the payment transaction
 // and responses with the transaction's data
 func (a *API) AuthoriseCompletion(ctx echo.Context) error {
-	var request AuthoriseJSONRequestBody
+	var request AuthoriseCompletionJSONRequestBody
+	fmt.Println("AuthoriseCompletion incomming...")
 	err := ctx.Bind(&request)
 	if err != nil {
 		return err
@@ -72,6 +76,7 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	}
 	response := parseResult(result)
 	ctx.JSON(http.StatusOK, response)
+	fmt.Printf("AuthoriseCompetion result: %+v\n", *response.Transaction)
 	return nil
 }
 
