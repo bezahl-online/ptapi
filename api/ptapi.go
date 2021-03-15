@@ -86,27 +86,28 @@ func parseResult(result zvt.CompletionResponse) *CompletionResponse {
 		t := AuthoriseResponse{}
 		switch zvtT.Result {
 		case zvt.Result_Success:
-			d := *zvtT.Data
 			t.Result = AuthoriseResult_success
-
-			t.Data = &AuthoriseResponseData{
-				Aid:        new(string),
-				Amount:     d.Amount,
-				Card:       Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
-				CardTech:   new(int32),
-				Crypto:     "",
-				ReceiptNr:  int64(d.ReceiptNr),
-				TerminalId: d.TID,
-				Timestamp:  d.Date + " " + d.Time,
-				TurnoverNr: int64(d.TurnoverNr),
-				VuNr:       d.VU,
-			}
-			*t.Data.CardTech = int32(d.Card.Tech)
-			response.Transaction = &t
 		case zvt.Result_Abort:
 			t.Result = AuthoriseResult_abort
 		case zvt.Result_Pending:
 			t.Result = AuthoriseResult_pending
+			if zvtT.Data != nil {
+				d := *zvtT.Data
+				t.Data = &AuthoriseResponseData{
+					Aid:        new(string),
+					Amount:     d.Amount,
+					Card:       Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
+					CardTech:   new(int32),
+					Crypto:     "",
+					ReceiptNr:  int64(d.ReceiptNr),
+					TerminalId: d.TID,
+					Timestamp:  d.Date + " " + d.Time,
+					TurnoverNr: int64(d.TurnoverNr),
+					VuNr:       d.VU,
+				}
+				*t.Data.CardTech = int32(d.Card.Tech)
+			}
+			response.Transaction = &t
 		default:
 			t.Error = "no result"
 		}

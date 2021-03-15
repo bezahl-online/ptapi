@@ -68,7 +68,7 @@ func TestParseResult(t *testing.T) {
 				VuNr:       "100003045",
 			},
 			Error:  "",
-			Result: "success",
+			Result: "pending",
 		},
 	}
 	*(*want.Transaction.Data).CardTech = 3
@@ -77,7 +77,7 @@ func TestParseResult(t *testing.T) {
 		Message: "Test message",
 		Transaction: &zvt.AuthResult{
 			Error:  "",
-			Result: "success",
+			Result: "pending",
 			Data: &zvt.AuthResultData{
 				Amount:     199,
 				ReceiptNr:  120,
