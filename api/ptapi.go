@@ -1,9 +1,7 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	zvt "github.com/bezahl-online/zvt/command"
@@ -25,12 +23,31 @@ func init() {
 	fmt.Println("init")
 	server := &API{}
 	RegisterHandlers(e, server)
-	// go device.Connect(&scanner)
 }
 
 // GetTest returns status ok
 func (a *API) GetTest(ctx echo.Context) error {
 	var err error
+	err = SendStatus(ctx, http.StatusOK, "OK")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Abort aborts running authorisation process
+func (a *API) Abort(ctx echo.Context) error {
+	var err error
+	var request AbortJSONRequestBody
+	fmt.Println("Abort incomming...")
+	err = ctx.Bind(&request)
+	if err != nil {
+		return err
+	}
+	err = zvt.PaymentTerminal.Abort()
+	if err != nil {
+		return err
+	}
 	err = SendStatus(ctx, http.StatusOK, "OK")
 	if err != nil {
 		return err
@@ -44,7 +61,6 @@ func (a *API) Authorise(ctx echo.Context) error {
 	var err error
 	var request AuthoriseJSONRequestBody
 	authCnt = 0
-	zvt.PaymentTerminal.Connect()
 	fmt.Println("Authorise incomming...")
 	err = ctx.Bind(&request)
 	if err != nil {
@@ -81,8 +97,8 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	}
 	response := parseResult(result)
 	ctx.JSON(http.StatusOK, response)
-	jsonResp, err := json.Marshal(response)
-	ioutil.WriteFile(fmt.Sprintf("mockserver/authorisation/abort/completion%02d", authCnt), jsonResp, 0644)
+	// jsonResp, err := json.Marshal(response)
+	// ioutil.WriteFile(fmt.Sprintf("mockserver/authorisation/abort/completion%02d", authCnt), jsonResp, 0644)
 	fmt.Printf("AuthoriseCompetion result: %+v\n", *response.Transaction)
 	return nil
 }

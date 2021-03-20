@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/bezahl-online/ptapi/api"
 	"github.com/bezahl-online/ptapi/param"
@@ -49,6 +50,22 @@ func (a *API) Authorise(ctx echo.Context) error {
 	return nil
 }
 
+// Abort aborts running authorisation process
+func (a *API) Abort(ctx echo.Context) error {
+	var err error
+	var request api.AbortJSONRequestBody
+	fmt.Println("Abort incomming...")
+	err = ctx.Bind(&request)
+	if err != nil {
+		return err
+	}
+	err = SendStatus(ctx, http.StatusOK, "OK")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // AuthoriseCompletion completes the payment transaction
 // and responses with the transaction's data
 func (a *API) AuthoriseCompletion(ctx echo.Context) error {
@@ -59,6 +76,7 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 		return err
 	}
 	fmt.Printf("Mock AuthoriseCompletion for receipt '%s' OK\n", request.ReceiptCode)
+	time.Sleep(500 * time.Millisecond)
 	resultJson, err := ioutil.ReadFile(fmt.Sprintf("mockserver/%s/completion%02d", *param.TestDir, authCnt))
 	var response *api.CompletionResponse = &api.CompletionResponse{}
 	err = json.Unmarshal(resultJson, response)

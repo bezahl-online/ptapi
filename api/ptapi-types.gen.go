@@ -63,6 +63,11 @@ type Status struct {
 // Statusresponse defines model for statusresponse.
 type Statusresponse Status
 
+// AbortJSONBody defines parameters for Abort.
+type AbortJSONBody struct {
+	ReceiptCode *string `json:"receipt_code,omitempty"`
+}
+
 // AuthoriseJSONBody defines parameters for Authorise.
 type AuthoriseJSONBody struct {
 
@@ -75,6 +80,9 @@ type AuthoriseJSONBody struct {
 type AuthoriseCompletionJSONBody struct {
 	ReceiptCode string `json:"receipt_code"`
 }
+
+// AbortJSONRequestBody defines body for Abort for application/json ContentType.
+type AbortJSONRequestBody AbortJSONBody
 
 // AuthoriseJSONRequestBody defines body for Authorise for application/json ContentType.
 type AuthoriseJSONRequestBody AuthoriseJSONBody

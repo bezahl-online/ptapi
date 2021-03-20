@@ -46,31 +46,27 @@ paths:
         '400':
           $ref: '#/components/responses/statusresponse'
           
-  # /poll_intermediate:
-  #    post:
-  #     operationId: Intermediate
-  #     requestBody:
-  #       description: >-
-  #         initiate payment; api is stateful and will manage 
-  #         and store intemediate messages from PT and log it 
-  #         to a database
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               receipt_code:
-  #                 type: string
-  #                 example: "00012021012713032101"
-  #     responses:
-  #       '200':
-  #         description: response of successful authorisation
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/authorise_response'
-  #       '400':
-  #         $ref: '#/components/responses/statusresponse'
+  /abort:
+    post:
+      operationId: abort
+      requestBody:
+        description: >-
+          aborts running authorisation process
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receipt_code:
+                  type: string
+                  example: "00012021012713032101"
+
+      responses:
+        '200':
+          $ref: '#/components/responses/statusresponse'
+        '400':
+          $ref: '#/components/responses/statusresponse'
+
         
   /authorise_completion:
      post:
