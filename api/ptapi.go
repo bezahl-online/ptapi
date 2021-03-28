@@ -122,11 +122,11 @@ func parseResult(result zvt.CompletionResponse) *CompletionResponse {
 			if zvtT.Data != nil {
 				d := *zvtT.Data
 				t.Data = &AuthoriseResponseData{
-					Aid:        new(string),
+					Aid:        &d.AID, // Gen.Nr.
 					Amount:     d.Amount,
 					Card:       Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
 					CardTech:   new(int32),
-					Crypto:     "",
+					Crypto:     "", // FIXME: find field
 					ReceiptNr:  int64(d.ReceiptNr),
 					TerminalId: d.TID,
 					Timestamp:  d.Date + " " + d.Time,
