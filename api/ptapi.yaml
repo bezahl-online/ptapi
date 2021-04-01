@@ -21,9 +21,9 @@ paths:
       operationId: authorise
       requestBody:
         description: >-
-          initiate payment; api is stateful and will manage 
-          and store intemediate messages from PT and log it 
-          to a database
+          initiate payment authorisation; api will log intemediate messages from PT;
+          after initiation the authorisation_competion must be polled until the
+          return result indicates either success or abortion of the process
         content:
           application/json:
             schema:
@@ -73,9 +73,7 @@ paths:
       operationId: AuthoriseCompletion
       requestBody:
         description: >-
-          initiate payment; api is stateful and will manage 
-          and store intemediate messages from PT and log it 
-          to a database
+          use to poll PT until completion of the finished
         content:
           application/json:
             schema:
@@ -88,18 +86,45 @@ paths:
                 - receipt_code
       responses:
         '200':
-          description: response of successful authorisation
+          description: response of successful initiation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/completion_response'
+                $ref: '#/components/schemas/auth_completion_response'
         '400':
           $ref: '#/components/responses/statusresponse'
-        
+
+  /endofday:
+    post:
+      operationId: EndOfDay
+      description: >-
+        initiate end of day; api will log intemediate messages from PT;
+        after initiation the endofday_competion must be polled until the
+        return result indicates either success or abortion of the process
+      responses:
+        '200':
+          $ref: '#/components/responses/statusresponse'
+        '400':
+          $ref: '#/components/responses/statusresponse'
+          
+               
+  /endofday_completion:
+    post:
+      operationId: EndOfDayCompletion
+      description: >-
+        use to poll PT until completion of the finished
+      responses:
+        '200':
+          description: response of successful initiation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/end_of_day_completion_response'
+        '400':
+          $ref: '#/components/responses/statusresponse'
                                 
 components:
 
-      
   responses:
     statusresponse:
       description: status message with status code and message 
@@ -108,7 +133,7 @@ components:
           schema:
             $ref: '#/components/schemas/status'
             
-          
+   
   schemas:
     status:
       type: object
@@ -157,7 +182,6 @@ components:
           $ref: '#/components/schemas/authorise_result'
         data:
           $ref: '#/components/schemas/authorise_response_data'
-
       required:
         - error
         - result
@@ -216,7 +240,7 @@ components:
         - amount
         - timestamp
 
-    completion_response:
+    auth_completion_response:
       type: object
       properties:
         status:
@@ -231,3 +255,135 @@ components:
       required:
         - status
         - message
+        
+    end_of_day_completion_response:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 1
+        message:
+          type: string
+          example: 'please wait'
+        transaction:
+          $ref: '#/components/schemas/end_of_day_response'
+      required:
+        - status
+        - message
+        
+    end_of_day_response:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "timeout"
+        result:
+          $ref: '#/components/schemas/end_of_day_result'
+        data:
+          $ref: '#/components/schemas/end_of_day_response_data'
+      required:
+        - error
+        - result
+    
+    end_of_day_result:
+      type: string
+      enum:
+        - 'pending'
+        - 'success'
+        - 'timeout'
+        - 'abort'
+
+    end_of_day_response_data:
+      type: object
+      properties:
+        tracenr:
+          type: integer
+          format: int64
+          example: 1234
+        date:           
+          type: string
+          example:   "3103"          
+        time:           
+          type: string
+          example: "170521"
+        total:           
+          type: integer
+          format: int64
+          example: 12340
+        single_totals:
+          $ref: '#/components/schemas/single_totals'
+      required:
+        - tracenr
+        - date    
+        - time      
+        - total
+        - single_totals
+              
+    single_totals:
+      type: object
+      properties:
+        ReceiptNrStart:
+          type: integer
+          format: int64
+          example: 68
+        ReceiptNrEnd:  
+          type: integer
+          format: int64
+          example: 71
+        CountEC:       
+          type: integer
+          format: int64
+          example: 4
+        TotalEC:       
+          type: integer
+          format: int64
+          example: 2600
+        CountJCB:      
+          type: integer
+          format: int64
+          example: 0
+        TotalJCB:      
+          type: integer
+          format: int64
+          example: 0
+        CountEurocard: 
+          type: integer
+          format: int64
+          example: 0
+        TotalEurocard: 
+          type: integer
+          format: int64
+          example: 0
+        CountAmex:     
+          type: integer
+          format: int64
+          example: 0
+        TotalAmex:     
+          type: integer
+          format: int64
+          example: 0
+        CountVisa:     
+          type: integer
+          format: int64
+          example: 0
+        TotalVisa:     
+          type: integer
+          format: int64
+          example: 0
+        CountDiners:   
+          type: integer
+          format: int64
+          example: 0
+        TotalDiners:   
+          type: integer
+          format: int64
+          example: 0
+        CountOther:    
+          type: integer
+          format: int64
+          example: 0
+        TotalOther:    
+          type: integer
+          format: int64
+          example: 0
