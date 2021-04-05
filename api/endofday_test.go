@@ -44,16 +44,50 @@ func TestParseEndOfDayResult(t *testing.T) {
 		Status:  1,
 		Transaction: &EndOfDayResponse{
 			Data: &EndOfDayResponseData{
-				Date:         "",
-				SingleTotals: SingleTotals{},
-				Time:         "",
-				Total:        0,
-				Tracenr:      0,
+				Date: "0104",
+				SingleTotals: SingleTotals{
+					CountAmex:      new(int64),
+					CountDiners:    new(int64),
+					CountEC:        new(int64),
+					CountEurocard:  new(int64),
+					CountJCB:       new(int64),
+					CountOther:     new(int64),
+					CountVisa:      new(int64),
+					ReceiptNrEnd:   new(int64),
+					ReceiptNrStart: new(int64),
+					TotalAmex:      new(int64),
+					TotalDiners:    new(int64),
+					TotalEC:        new(int64),
+					TotalEurocard:  new(int64),
+					TotalJCB:       new(int64),
+					TotalOther:     new(int64),
+					TotalVisa:      new(int64),
+				},
+				Time:    "123015",
+				Total:   356600,
+				Tracenr: 12345678,
 			},
 			Error:  "",
 			Result: "pending",
 		},
 	}
+	st := want.Transaction.Data.SingleTotals
+	*st.CountAmex = int64(3)
+	*st.CountDiners = int64(5)
+	*st.CountEC = int64(7)
+	*st.CountEurocard = int64(2)
+	*st.CountJCB = int64(1)
+	*st.CountOther = int64(6)
+	*st.CountVisa = int64(4)
+	*st.ReceiptNrEnd = int64(134)
+	*st.ReceiptNrStart = int64(123)
+	*st.TotalAmex = int64(789)
+	*st.TotalDiners = int64(567)
+	*st.TotalEC = int64(3500)
+	*st.TotalEurocard = int64(456)
+	*st.TotalJCB = int64(123)
+	*st.TotalOther = int64(890)
+	*st.TotalVisa = int64(234)
 	result := zvt.EndOfDayResponse{
 		TransactionResponse: zvt.TransactionResponse{
 			Status:  1,
@@ -63,11 +97,28 @@ func TestParseEndOfDayResult(t *testing.T) {
 			Error:  "",
 			Result: "pending",
 			Data: &zvt.EoDResultData{
-				TraceNr: 0,
-				Date:    "",
-				Time:    "",
-				Total:   0,
-				Totals:  zvt.SingleTotals{},
+				TraceNr: 12345678,
+				Date:    "0104",
+				Time:    "123015",
+				Total:   356600,
+				Totals: zvt.SingleTotals{
+					ReceiptNrStart: 123,
+					ReceiptNrEnd:   134,
+					CountEC:        7,
+					TotalEC:        3500,
+					CountJCB:       1,
+					TotalJCB:       123,
+					CountEurocard:  2,
+					TotalEurocard:  456,
+					CountAmex:      3,
+					TotalAmex:      789,
+					CountVisa:      4,
+					TotalVisa:      234,
+					CountDiners:    5,
+					TotalDiners:    567,
+					CountOther:     6,
+					TotalOther:     890,
+				},
 			},
 		},
 	}
