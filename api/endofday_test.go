@@ -33,6 +33,7 @@ func TestEndOfDayCompletion(t *testing.T) {
 				break
 			}
 			if assert.NoError(t, err) {
+				_ = 0
 			}
 		}
 	}
@@ -101,7 +102,7 @@ func TestParseEndOfDayResult(t *testing.T) {
 				Date:    "0104",
 				Time:    "123015",
 				Total:   356600,
-				Totals: zvt.SingleTotals{
+				Totals: &zvt.SingleTotals{
 					ReceiptNrStart: 123,
 					ReceiptNrEnd:   134,
 					CountEC:        7,

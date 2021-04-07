@@ -6,6 +6,7 @@ import (
 
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/labstack/echo/v4"
+	"go.uber.org/zap"
 )
 
 //go:generate go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen --config=types.cfg.yaml ptapi.yaml
@@ -16,8 +17,7 @@ type API struct{}
 
 var e *echo.Echo = echo.New()
 var authCnt int
-
-// var scanner device.Scanner
+var Logger *zap.Logger = zvt.Logger
 
 func init() {
 	fmt.Println("init")
@@ -27,9 +27,7 @@ func init() {
 
 // GetTest returns status ok
 func (a *API) GetTest(ctx echo.Context) error {
-	var err error
-	err = SendStatus(ctx, http.StatusOK, "OK")
-	if err != nil {
+	if err := SendStatus(ctx, http.StatusOK, "OK"); err != nil {
 		return err
 	}
 	return nil
@@ -39,7 +37,7 @@ func (a *API) GetTest(ctx echo.Context) error {
 func (a *API) Abort(ctx echo.Context) error {
 	var err error
 	var request AbortJSONRequestBody
-	fmt.Println("Abort incomming...")
+	Logger.Info("Abort incomming...")
 	err = ctx.Bind(&request)
 	if err != nil {
 		return err

@@ -41,6 +41,7 @@ func TestAuthoriseCompletion(t *testing.T) {
 				break
 			}
 			if assert.NoError(t, err) {
+				_ = 0
 			}
 		}
 	}

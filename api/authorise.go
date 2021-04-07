@@ -11,41 +11,39 @@ import (
 // Authorise initiates a payment tranaction given
 // a specific amount and receipt code
 func (a *API) Authorise(ctx echo.Context) error {
-	var err error
 	var request AuthoriseJSONRequestBody
-	authCnt = 0
-	fmt.Println("Authorise incomming...")
-	err = ctx.Bind(&request)
-	if err != nil {
+	if err := ctx.Bind(&request); err != nil {
 		return err
 	}
-	if err = zvt.PaymentTerminal.Authorisation(&zvt.AuthConfig{Amount: request.Amount}); err != nil {
+	Logger.Info(fmt.Sprintf("request authorise %d for receipt %s",
+		request.Amount, request.ReceiptCode))
+	if err := zvt.PaymentTerminal.Authorisation(&zvt.AuthConfig{Amount: request.Amount}); err != nil {
 		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
 	}
+	// authCnt = 0
 	return SendStatus(ctx, http.StatusOK, "OK")
 }
 
 // AuthoriseCompletion completes the payment transaction
 // and responses with the transaction's data
 func (a *API) AuthoriseCompletion(ctx echo.Context) error {
-	authCnt++
 	var request AuthoriseCompletionJSONRequestBody
-	fmt.Println("AuthoriseCompletion incomming...")
-	err := ctx.Bind(&request)
-	if err != nil {
+	if err := ctx.Bind(&request); err != nil {
 		return err
 	}
-	PT := zvt.PaymentTerminal
+	Logger.Info(fmt.Sprintf("authorise completion for receipt %s",
+		request.ReceiptCode))
 	var response *zvt.AuthorisationResponse = &zvt.AuthorisationResponse{}
-	err = PT.Completion(response)
-	if err != nil {
+	if err := zvt.PaymentTerminal.Completion(response); err != nil {
 		return err
 	}
 	resp := parseAuthResult(*response)
 	ctx.JSON(http.StatusOK, resp)
+	// authCnt++
 	// jsonResp, err := json.Marshal(resp)
 	// ioutil.WriteFile(fmt.Sprintf("mockserver/authorisation/abort/completion%02d", authCnt), jsonResp, 0644)
-	fmt.Printf("AuthoriseCompetion result: %+v\n", *resp.Transaction)
+	Logger.Info(fmt.Sprintf("authorise competion %s",
+		resp.Transaction.Result))
 	return nil
 }
 

@@ -42,7 +42,7 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	}
 	fmt.Printf("Mock AuthoriseCompletion for receipt '%s' OK\n", request.ReceiptCode)
 	time.Sleep(50 * time.Millisecond)
-	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/%s/completion%02d", *param.TestDir, authCnt))
+	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/authorisation/%s/completion%02d", *param.TestDir, authCnt))
 	var response *api.AuthCompletionResponse = &api.AuthCompletionResponse{}
 	err = json.Unmarshal(resultJson, response)
 	if err != nil {

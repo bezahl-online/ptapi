@@ -11,9 +11,9 @@ import (
 // EndOfDay initiates a payment tranaction given
 // a specific amount and receipt code
 func (a *API) EndOfDay(ctx echo.Context) error {
-	var err error
-	authCnt = 0
-	if err = zvt.PaymentTerminal.EndOfDay(); err != nil {
+	Logger.Info("request end of day")
+	// authCnt = 0
+	if err := zvt.PaymentTerminal.EndOfDay(); err != nil {
 		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
 	}
 	return SendStatus(ctx, http.StatusOK, "OK")
@@ -22,16 +22,17 @@ func (a *API) EndOfDay(ctx echo.Context) error {
 // EndOfDayCompletion completes the payment transaction
 // and responses with the transaction's data
 func (a *API) EndOfDayCompletion(ctx echo.Context) error {
-	authCnt++
 	var response *zvt.EndOfDayResponse = &zvt.EndOfDayResponse{}
 	if err := zvt.PaymentTerminal.Completion(response); err != nil {
 		return err
 	}
 	resp := parseEndOfDayResult(*response)
 	ctx.JSON(http.StatusOK, resp)
-	// jsonResp, err := json.Marshal(resp)
-	// ioutil.WriteFile(fmt.Sprintf("mockserver/authorisation/abort/completion%02d", authCnt), jsonResp, 0644)
-	fmt.Printf("EndOfDayCompetion result: %+v\n", *resp.Transaction)
+	// authCnt++
+	// jsonResp, _ := json.Marshal(resp)
+	// ioutil.WriteFile(fmt.Sprintf("completion%02d", authCnt), jsonResp, 0644)
+	Logger.Info(fmt.Sprintf("end of day competion %s",
+		resp.Transaction.Result))
 	return nil
 }
 
@@ -76,24 +77,26 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) *EndOfDayCompletionRespons
 					Total:   zvtT.Data.Total,
 					Tracenr: int64(zvtT.Data.TraceNr),
 				}
-				totals := t.Data.SingleTotals
-				zT := zvtT.Data.Totals
-				*totals.ReceiptNrStart = int64(zT.ReceiptNrStart)
-				*totals.ReceiptNrEnd = int64(zT.ReceiptNrEnd)
-				*totals.CountEC = int64(zT.CountEC)
-				*totals.TotalEC = int64(zT.TotalEC)
-				*totals.CountJCB = int64(zT.CountJCB)
-				*totals.TotalJCB = int64(zT.TotalJCB)
-				*totals.CountEurocard = int64(zT.CountEurocard)
-				*totals.TotalEurocard = int64(zT.TotalEurocard)
-				*totals.CountAmex = int64(zT.CountAmex)
-				*totals.TotalAmex = int64(zT.TotalAmex)
-				*totals.CountVisa = int64(zT.CountVisa)
-				*totals.TotalVisa = int64(zT.TotalVisa)
-				*totals.CountDiners = int64(zT.CountDiners)
-				*totals.TotalDiners = int64(zT.TotalDiners)
-				*totals.CountOther = int64(zT.CountOther)
-				*totals.TotalOther = int64(zT.TotalOther)
+				if zvtT.Data.Totals != nil {
+					totals := t.Data.SingleTotals
+					zT := zvtT.Data.Totals
+					*totals.ReceiptNrStart = int64(zT.ReceiptNrStart)
+					*totals.ReceiptNrEnd = int64(zT.ReceiptNrEnd)
+					*totals.CountEC = int64(zT.CountEC)
+					*totals.TotalEC = int64(zT.TotalEC)
+					*totals.CountJCB = int64(zT.CountJCB)
+					*totals.TotalJCB = int64(zT.TotalJCB)
+					*totals.CountEurocard = int64(zT.CountEurocard)
+					*totals.TotalEurocard = int64(zT.TotalEurocard)
+					*totals.CountAmex = int64(zT.CountAmex)
+					*totals.TotalAmex = int64(zT.TotalAmex)
+					*totals.CountVisa = int64(zT.CountVisa)
+					*totals.TotalVisa = int64(zT.TotalVisa)
+					*totals.CountDiners = int64(zT.CountDiners)
+					*totals.TotalDiners = int64(zT.TotalDiners)
+					*totals.CountOther = int64(zT.CountOther)
+					*totals.TotalOther = int64(zT.TotalOther)
+				}
 			}
 			response.Transaction = &t
 		default:
