@@ -1,13 +1,17 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/labstack/echo/v4"
 )
+
+var authCnt int = 0
 
 // Authorise initiates a payment tranaction given
 // a specific amount and receipt code
@@ -21,7 +25,7 @@ func (a *API) Authorise(ctx echo.Context) error {
 	if err := zvt.PaymentTerminal.Authorisation(&zvt.AuthConfig{Amount: request.Amount}); err != nil {
 		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
 	}
-	// authCnt = 0
+	authCnt = 0
 	return SendStatus(ctx, http.StatusOK, "OK")
 }
 
@@ -40,9 +44,9 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	}
 	resp := parseAuthResult(*response)
 	ctx.JSON(http.StatusOK, resp)
-	// authCnt++
-	// jsonResp, err := json.Marshal(resp)
-	// ioutil.WriteFile(fmt.Sprintf("mockserver/authorisation/abort/completion%02d", authCnt), jsonResp, 0644)
+	authCnt++
+	jsonResp, _ := json.Marshal(resp)
+	ioutil.WriteFile(fmt.Sprintf("completion%02d", authCnt), jsonResp, 0644)
 	Logger.Info(fmt.Sprintf("authorise competion %s",
 		resp.Transaction.Result))
 	return nil
