@@ -1,5 +1,5 @@
 output:
-  ptapi-types.gen.go
+  gen/ptapi-types.gen.go
 generate:
   - types
-package: api
+package: gen

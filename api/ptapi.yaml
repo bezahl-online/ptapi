@@ -49,17 +49,17 @@ paths:
   /abort:
     post:
       operationId: abort
-      requestBody:
-        description: >-
-          aborts running authorisation process
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                receipt_code:
-                  type: string
-                  example: "00012021012713032101"
+      # requestBody:
+      #   description: >-
+      #     aborts running authorisation process
+      #   content:
+      #     application/json:
+      #       schema:
+      #         type: object
+      #         properties:
+      #           receipt_code:
+      #             type: string
+      #             example: "00012021012713032101"
 
       responses:
         '200':
@@ -201,6 +201,10 @@ components:
           type: integer
           format: int64
           example: 2790
+        currency:
+          type: integer
+          format: int32
+          example: 123
         timestamp:
           type: string
           example: '20210310 094833'
@@ -225,6 +229,9 @@ components:
         aid:
           type: string
           example: 'A0000000041010'
+        info:
+          type: string
+          example: 'Karte abgelehnt'
         crypto:
           type: string
           example: 'CC0D7CBD9E02A2A'
@@ -239,6 +246,8 @@ components:
         - terminal_id
         - amount
         - timestamp
+        - currency
+        - info
 
     auth_completion_response:
       type: object

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/deepmap/oapi-codegen/pkg/testutil"
 	"github.com/stretchr/testify/assert"

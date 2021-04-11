@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/labstack/echo/v4"
 )
@@ -67,6 +68,7 @@ func parseAuthResult(result zvt.AuthorisationResponse) *AuthCompletionResponse {
 				d := *zvtT.Data
 				t.Data = &AuthoriseResponseData{
 					Aid:        &d.AID, // Gen.Nr.
+					Currency:   int32(d.Currency),
 					Amount:     d.Amount,
 					Card:       Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
 					CardTech:   new(int32),
@@ -75,6 +77,7 @@ func parseAuthResult(result zvt.AuthorisationResponse) *AuthCompletionResponse {
 					TerminalId: d.TID,
 					Timestamp:  d.Date + " " + d.Time,
 					TurnoverNr: int64(d.TurnoverNr),
+					Info:       d.Info,
 					VuNr:       d.VU,
 				}
 				*t.Data.CardTech = int32(d.Card.Tech)

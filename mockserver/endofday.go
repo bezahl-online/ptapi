@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bezahl-online/ptapi/api"
+	api "github.com/bezahl-online/ptapi/api/gen"
 	"github.com/bezahl-online/ptapi/param"
 	"github.com/labstack/echo/v4"
 )
@@ -29,7 +29,6 @@ func (a *API) EndOfDay(ctx echo.Context) error {
 // and responses with the transaction's data
 func (a *API) EndOfDayCompletion(ctx echo.Context) error {
 	authCnt++
-	fmt.Printf("Mock EndOfDayCompletion OK\n")
 	time.Sleep(50 * time.Millisecond)
 	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/endofday/%s/completion%02d", *param.TestDir, authCnt))
 	var response *api.AuthCompletionResponse = &api.AuthCompletionResponse{}

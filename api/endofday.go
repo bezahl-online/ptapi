@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/labstack/echo/v4"
 )

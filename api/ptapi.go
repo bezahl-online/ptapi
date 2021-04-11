@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
@@ -16,7 +17,6 @@ import (
 type API struct{}
 
 var e *echo.Echo = echo.New()
-var authCnt int
 var Logger *zap.Logger = zvt.Logger
 
 func init() {
@@ -28,26 +28,6 @@ func init() {
 // GetTest returns status ok
 func (a *API) GetTest(ctx echo.Context) error {
 	if err := SendStatus(ctx, http.StatusOK, "OK"); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Abort aborts running authorisation process
-func (a *API) Abort(ctx echo.Context) error {
-	var err error
-	var request AbortJSONRequestBody
-	Logger.Info("Abort incomming...")
-	err = ctx.Bind(&request)
-	if err != nil {
-		return err
-	}
-	err = zvt.PaymentTerminal.Abort()
-	if err != nil {
-		return err
-	}
-	err = SendStatus(ctx, http.StatusOK, "OK")
-	if err != nil {
 		return err
 	}
 	return nil

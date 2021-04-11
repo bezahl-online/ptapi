@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bezahl-online/ptapi/api"
+	api "github.com/bezahl-online/ptapi/api/gen"
 	"github.com/bezahl-online/ptapi/param"
 	"github.com/labstack/echo/v4"
 )
@@ -40,7 +40,6 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Mock AuthoriseCompletion for receipt '%s' OK\n", request.ReceiptCode)
 	time.Sleep(50 * time.Millisecond)
 	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/authorisation/%s/completion%02d", *param.TestDir, authCnt))
 	var response *api.AuthCompletionResponse = &api.AuthCompletionResponse{}

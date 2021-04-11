@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/bezahl-online/ptapi/api"
+	api "github.com/bezahl-online/ptapi/api/gen"
 	"github.com/labstack/echo/v4"
 )
 
@@ -27,12 +27,6 @@ func (a *API) GetTest(ctx echo.Context) error {
 // Abort aborts running authorisation process
 func (a *API) Abort(ctx echo.Context) error {
 	var err error
-	var request api.AbortJSONRequestBody
-	fmt.Println("Abort incomming...")
-	err = ctx.Bind(&request)
-	if err != nil {
-		return err
-	}
 	err = SendStatus(ctx, http.StatusOK, "OK")
 	if err != nil {
 		return err
