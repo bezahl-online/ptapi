@@ -3,12 +3,17 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 
 	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/labstack/echo/v4"
 )
 
+// var authCnt int
+
+// var authCnt int
 // EndOfDay initiates a payment tranaction given
 // a specific amount and receipt code
 func (a *API) EndOfDay(ctx echo.Context) error {
@@ -27,7 +32,10 @@ func (a *API) EndOfDayCompletion(ctx echo.Context) error {
 	if err := zvt.PaymentTerminal.Completion(response); err != nil {
 		return err
 	}
-	resp := parseEndOfDayResult(*response)
+	resp, err := parseEndOfDayResult(*response)
+	if err != nil {
+		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
+	}
 	ctx.JSON(http.StatusOK, resp)
 	// authCnt++
 	// jsonResp, _ := json.Marshal(resp)
@@ -37,7 +45,7 @@ func (a *API) EndOfDayCompletion(ctx echo.Context) error {
 	return nil
 }
 
-func parseEndOfDayResult(result zvt.EndOfDayResponse) *EndOfDayCompletionResponse {
+func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionResponse, error) {
 	var response EndOfDayCompletionResponse = EndOfDayCompletionResponse{}
 	response.Status = int32(result.Status)
 	if len(result.Message) > 0 {
@@ -73,10 +81,9 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) *EndOfDayCompletionRespons
 						TotalOther:     new(int64),
 						TotalVisa:      new(int64),
 					},
-					Date:    zvtT.Data.Date,
-					Time:    zvtT.Data.Time,
-					Total:   zvtT.Data.Total,
-					Tracenr: int64(zvtT.Data.TraceNr),
+					Timestamp: "",
+					Total:     zvtT.Data.Total,
+					Tracenr:   int64(zvtT.Data.TraceNr),
 				}
 				if zvtT.Data.Totals != nil {
 					totals := t.Data.SingleTotals
@@ -98,6 +105,17 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) *EndOfDayCompletionRespons
 					*totals.CountOther = int64(zT.CountOther)
 					*totals.TotalOther = int64(zT.TotalOther)
 				}
+				var err error
+				t.Data.Timestamp, err =
+					compileTimestamp(zvtT.Data.Date, zvtT.Data.Time)
+				if err != nil {
+					return nil, err
+				}
+				tt, err := time.Parse("", t.Data.Timestamp)
+				if err != nil {
+					return nil, err
+				}
+				t.Data.UtcTime = tt.UTC().Unix()
 			}
 			response.Transaction = &t
 		default:
@@ -105,5 +123,31 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) *EndOfDayCompletionRespons
 		}
 		response.Transaction = &t
 	}
-	return &response
+	return &response, nil
+}
+
+func compileTimestamp(date, timeStr string) (string, error) {
+	month, err := strconv.ParseInt(date[:2], 10, 8)
+	if err != nil {
+		return "", err
+	}
+	day, err := strconv.ParseInt(date[2:], 10, 8)
+	if err != nil {
+		return "", err
+	}
+	hour, err := strconv.ParseInt(date[:2], 10, 8)
+	if err != nil {
+		return "", err
+	}
+	minute, err := strconv.ParseInt(timeStr[2:4], 10, 8)
+	if err != nil {
+		return "", err
+	}
+	second, err := strconv.ParseInt(timeStr[4:], 10, 8)
+	if err != nil {
+		return "", err
+	}
+	timestamp := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d",
+		time.Now().Year(), month, day, hour, minute, second)
+	return timestamp, nil
 }

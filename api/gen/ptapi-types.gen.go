@@ -68,11 +68,13 @@ type EndOfDayResponse struct {
 
 // EndOfDayResponseData defines model for end_of_day_response_data.
 type EndOfDayResponseData struct {
-	Date         string       `json:"date"`
 	SingleTotals SingleTotals `json:"single_totals"`
-	Time         string       `json:"time"`
-	Total        int64        `json:"total"`
-	Tracenr      int64        `json:"tracenr"`
+
+	// YYYY-MM-DD hh:mm:ss
+	Timestamp string `json:"timestamp"`
+	Total     int64  `json:"total"`
+	Tracenr   int64  `json:"tracenr"`
+	UtcTime   int64  `json:"utc_time"`
 }
 
 // EndOfDayResult defines model for end_of_day_result.

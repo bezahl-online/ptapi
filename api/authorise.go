@@ -1,17 +1,16 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"strings"
 
 	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
 	"github.com/labstack/echo/v4"
 )
 
-var authCnt int = 0
+// var authCnt int = 0
 
 // Authorise initiates a payment tranaction given
 // a specific amount and receipt code
@@ -23,9 +22,13 @@ func (a *API) Authorise(ctx echo.Context) error {
 	Logger.Info(fmt.Sprintf("request authorise %d for receipt %s",
 		request.Amount, request.ReceiptCode))
 	if err := zvt.PaymentTerminal.Authorisation(&zvt.AuthConfig{Amount: request.Amount}); err != nil {
-		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
+		status := http.StatusInternalServerError
+		if strings.Contains(err.Error(), "connect") {
+			status = http.StatusServiceUnavailable
+		}
+		return SendError(ctx, status, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
 	}
-	authCnt = 0
+	// authCnt = 0
 	return SendStatus(ctx, http.StatusOK, "OK")
 }
 
@@ -44,9 +47,9 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	}
 	resp := parseAuthResult(*response)
 	ctx.JSON(http.StatusOK, resp)
-	authCnt++
-	jsonResp, _ := json.Marshal(resp)
-	ioutil.WriteFile(fmt.Sprintf("completion%02d", authCnt), jsonResp, 0644)
+	// authCnt++
+	// jsonResp, _ := json.Marshal(resp)
+	// ioutil.WriteFile(fmt.Sprintf("completion%02d", authCnt), jsonResp, 0644)
 	Logger.Info(fmt.Sprintf("authorise competion %s",
 		resp.Transaction.Result))
 	return nil
@@ -76,7 +79,7 @@ func parseAuthResult(result zvt.AuthorisationResponse) *AuthCompletionResponse {
 					Amount:     d.Amount,
 					Card:       Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
 					CardTech:   new(int32),
-					Crypto:     "", // FIXME: find field
+					Crypto:     "", // FIXME: find field if possible
 					ReceiptNr:  int64(d.ReceiptNr),
 					TerminalId: d.TID,
 					Timestamp:  d.Date + " " + d.Time,

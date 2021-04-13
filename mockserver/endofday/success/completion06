@@ -1,1 +1,1 @@
-{"message":"","status":0,"transaction":{"data":{"date":"","single_totals":{"CountAmex":0,"CountDiners":0,"CountEC":0,"CountEurocard":0,"CountJCB":0,"CountOther":0,"CountVisa":0,"ReceiptNrEnd":0,"ReceiptNrStart":0,"TotalAmex":0,"TotalDiners":0,"TotalEC":0,"TotalEurocard":0,"TotalJCB":0,"TotalOther":0,"TotalVisa":0},"time":"","total":0,"tracenr":0},"error":"","result":"pending"}}
+{"message":"","status":0,"transaction":{"error":"","result":"success"}}

@@ -12,7 +12,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// FIXME: create End Of Day json files
 // EndOfDay initiates a payment tranaction given
 // a specific amount and receipt code
 func (a *API) EndOfDay(ctx echo.Context) error {
@@ -31,7 +30,7 @@ func (a *API) EndOfDayCompletion(ctx echo.Context) error {
 	authCnt++
 	time.Sleep(50 * time.Millisecond)
 	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/endofday/%s/completion%02d", *param.TestDir, authCnt))
-	var response *api.AuthCompletionResponse = &api.AuthCompletionResponse{}
+	var response *api.EndOfDayCompletionResponse = &api.EndOfDayCompletionResponse{}
 	if err := json.Unmarshal(resultJson, response); err != nil {
 		return err
 	}

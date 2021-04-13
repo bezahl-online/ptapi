@@ -46,7 +46,6 @@ func TestParseEndOfDayResult(t *testing.T) {
 		Status:  1,
 		Transaction: &EndOfDayResponse{
 			Data: &EndOfDayResponseData{
-				Date: "0104",
 				SingleTotals: SingleTotals{
 					CountAmex:      new(int64),
 					CountDiners:    new(int64),
@@ -65,9 +64,10 @@ func TestParseEndOfDayResult(t *testing.T) {
 					TotalOther:     new(int64),
 					TotalVisa:      new(int64),
 				},
-				Time:    "123015",
-				Total:   356600,
-				Tracenr: 12345678,
+				Timestamp: "2021-04-01 12:30:15",
+				UtcTime:   1618301026,
+				Total:     356600,
+				Tracenr:   12345678,
 			},
 			Error:  "",
 			Result: "pending",
@@ -124,6 +124,8 @@ func TestParseEndOfDayResult(t *testing.T) {
 			},
 		},
 	}
-	got := parseEndOfDayResult(result)
-	assert.EqualValues(t, want, *got)
+	got, err := parseEndOfDayResult(result)
+	if assert.NoError(t, err) {
+		assert.EqualValues(t, want, *got)
+	}
 }

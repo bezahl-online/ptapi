@@ -310,12 +310,15 @@ components:
           type: integer
           format: int64
           example: 1234
-        date:           
+        timestamp:    
+          description: YYYY-MM-DD hh:mm:ss       
           type: string
-          example:   "3103"          
-        time:           
-          type: string
-          example: "170521"
+          example:   "2021-03-31 17:05:21"
+        utc_time:
+          descrition: unix utc timestamp
+          type: integer
+          format: int64
+          example: 1608358936
         total:           
           type: integer
           format: int64
@@ -324,8 +327,8 @@ components:
           $ref: '#/components/schemas/single_totals'
       required:
         - tracenr
-        - date    
-        - time      
+        - timestamp    
+        - utc_time      
         - total
         - single_totals
               
