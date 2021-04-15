@@ -24,6 +24,14 @@ func (a *API) GetTest(ctx echo.Context) error {
 	return nil
 }
 
+// GetTest returns status ok
+func (a *API) DisplayText(ctx echo.Context) error {
+	if err := SendStatus(ctx, http.StatusOK, "OK"); err != nil {
+		return err
+	}
+	return nil
+}
+
 // Abort aborts running authorisation process
 func (a *API) Abort(ctx echo.Context) error {
 	var err error

@@ -21,12 +21,13 @@ func (a *API) Authorise(ctx echo.Context) error {
 	}
 	Logger.Info(fmt.Sprintf("request authorise %d for receipt %s",
 		request.Amount, request.ReceiptCode))
+	// FIXME: handle lost connection
 	if err := zvt.PaymentTerminal.Authorisation(&zvt.AuthConfig{Amount: request.Amount}); err != nil {
 		status := http.StatusInternalServerError
 		if strings.Contains(err.Error(), "connect") {
 			status = http.StatusServiceUnavailable
 		}
-		return SendError(ctx, status, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
+		return SendError(ctx, status, fmt.Sprintf("Authorise returns error: %s", err.Error()))
 	}
 	// authCnt = 0
 	return SendStatus(ctx, http.StatusOK, "OK")

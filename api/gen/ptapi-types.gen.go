@@ -74,7 +74,9 @@ type EndOfDayResponseData struct {
 	Timestamp string `json:"timestamp"`
 	Total     int64  `json:"total"`
 	Tracenr   int64  `json:"tracenr"`
-	UtcTime   int64  `json:"utc_time"`
+
+	// unix utc timestamp
+	UtcTime int64 `json:"utc_time"`
 }
 
 // EndOfDayResult defines model for end_of_day_result.
@@ -86,6 +88,30 @@ const (
 	EndOfDayResult_pending EndOfDayResult = "pending"
 	EndOfDayResult_success EndOfDayResult = "success"
 	EndOfDayResult_timeout EndOfDayResult = "timeout"
+)
+
+// RegisterCompletionResponse defines model for register_completion_response.
+type RegisterCompletionResponse struct {
+	Message     string            `json:"message"`
+	Status      int32             `json:"status"`
+	Transaction *RegisterResponse `json:"transaction,omitempty"`
+}
+
+// RegisterResponse defines model for register_response.
+type RegisterResponse struct {
+	Error  string         `json:"error"`
+	Result RegisterResult `json:"result"`
+}
+
+// RegisterResult defines model for register_result.
+type RegisterResult string
+
+// List of RegisterResult
+const (
+	RegisterResult_abort   RegisterResult = "abort"
+	RegisterResult_pending RegisterResult = "pending"
+	RegisterResult_success RegisterResult = "success"
+	RegisterResult_timeout RegisterResult = "timeout"
 )
 
 // SingleTotals defines model for single_totals.
@@ -134,8 +160,24 @@ type AuthoriseCompletionJSONBody struct {
 	ReceiptCode string `json:"receipt_code"`
 }
 
+// DisplayTextJSONBody defines parameters for DisplayText.
+type DisplayTextJSONBody struct {
+	Lines *[]string `json:"lines,omitempty"`
+}
+
+// RegisterJSONBody defines parameters for Register.
+type RegisterJSONBody struct {
+	Option *string `json:"option,omitempty"`
+}
+
 // AuthoriseJSONRequestBody defines body for Authorise for application/json ContentType.
 type AuthoriseJSONRequestBody AuthoriseJSONBody
 
 // AuthoriseCompletionJSONRequestBody defines body for AuthoriseCompletion for application/json ContentType.
 type AuthoriseCompletionJSONRequestBody AuthoriseCompletionJSONBody
+
+// DisplayTextJSONRequestBody defines body for DisplayText for application/json ContentType.
+type DisplayTextJSONRequestBody DisplayTextJSONBody
+
+// RegisterJSONRequestBody defines body for Register for application/json ContentType.
+type RegisterJSONRequestBody RegisterJSONBody
