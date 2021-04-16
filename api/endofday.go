@@ -111,11 +111,11 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionRespon
 				if err != nil {
 					return nil, err
 				}
-				tt, err := time.Parse("", t.Data.Timestamp)
-				if err != nil {
-					return nil, err
-				}
-				t.Data.UtcTime = tt.UTC().Unix()
+				// tt, err := time.Parse("", t.Data.Timestamp) // FIXME
+				// if err != nil {
+				// 	return nil, err
+				// }
+				// t.Data.UtcTime = tt.UTC().Unix()
 			}
 			response.Transaction = &t
 		default:
@@ -135,7 +135,7 @@ func compileTimestamp(date, timeStr string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	hour, err := strconv.ParseInt(date[:2], 10, 8)
+	hour, err := strconv.ParseInt(timeStr[:2], 10, 8)
 	if err != nil {
 		return "", err
 	}

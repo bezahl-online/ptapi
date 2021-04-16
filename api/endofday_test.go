@@ -65,7 +65,7 @@ func TestParseEndOfDayResult(t *testing.T) {
 					TotalVisa:      new(int64),
 				},
 				Timestamp: "2021-04-01 12:30:15",
-				UtcTime:   1618301026,
+				UtcTime:   0,
 				Total:     356600,
 				Tracenr:   12345678,
 			},
@@ -100,7 +100,7 @@ func TestParseEndOfDayResult(t *testing.T) {
 			Result: "pending",
 			Data: &zvt.EoDResultData{
 				TraceNr: 12345678,
-				Date:    "0104",
+				Date:    "0401",
 				Time:    "123015",
 				Total:   356600,
 				Totals: &zvt.SingleTotals{
