@@ -55,7 +55,7 @@ func TestParseAuthResult(t *testing.T) {
 		Status:  1,
 		Transaction: &AuthoriseResponse{
 			Data: &AuthoriseResponseData{
-				Aid:    new(string),
+				Aid:    "",
 				Amount: 199,
 				Card: Card{
 					Name:       "Mastercard",
@@ -63,7 +63,7 @@ func TestParseAuthResult(t *testing.T) {
 					SequenceNr: 444,
 					Type:       0x70,
 				},
-				CardTech:   new(int32),
+				CardTech:   3,
 				Crypto:     "",
 				ReceiptNr:  120,
 				TerminalId: "29001006",
@@ -75,7 +75,6 @@ func TestParseAuthResult(t *testing.T) {
 			Result: "pending",
 		},
 	}
-	*(*want.Transaction.Data).CardTech = 3
 	result := zvt.AuthorisationResponse{
 		TransactionResponse: zvt.TransactionResponse{
 			Status:  1,

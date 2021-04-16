@@ -75,20 +75,21 @@ func parseAuthResult(result zvt.AuthorisationResponse) *AuthCompletionResponse {
 			if zvtT.Data != nil {
 				d := *zvtT.Data
 				t.Data = &AuthoriseResponseData{
-					Aid:        &d.AID, // Gen.Nr.
-					Currency:   int32(d.Currency),
-					Amount:     d.Amount,
-					Card:       Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
-					CardTech:   new(int32),
-					Crypto:     "", // FIXME: find field if possible
-					ReceiptNr:  int64(d.ReceiptNr),
-					TerminalId: d.TID,
-					Timestamp:  d.Date + " " + d.Time,
-					TurnoverNr: int64(d.TurnoverNr),
-					Info:       d.Info,
-					VuNr:       d.VU,
+					Aid:         d.AID,
+					Currency:    int32(d.Currency),
+					Amount:      d.Amount,
+					Card:        Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
+					CardTech:    int32(d.Card.Tech),
+					Crypto:      "",
+					EmvCustomer: d.EMVCustomer,
+					EmvMerchant: d.EMVMerchant,
+					ReceiptNr:   int64(d.ReceiptNr),
+					TerminalId:  d.TID,
+					Timestamp:   d.Date + " " + d.Time,
+					TurnoverNr:  int64(d.TurnoverNr),
+					Info:        d.Info,
+					VuNr:        d.VU,
 				}
-				*t.Data.CardTech = int32(d.Card.Tech)
 			}
 			response.Transaction = &t
 		default:

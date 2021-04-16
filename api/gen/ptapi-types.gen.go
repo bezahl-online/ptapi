@@ -19,18 +19,22 @@ type AuthoriseResponse struct {
 
 // AuthoriseResponseData defines model for authorise_response_data.
 type AuthoriseResponseData struct {
-	Aid        *string `json:"aid,omitempty"`
-	Amount     int64   `json:"amount"`
-	Card       Card    `json:"card"`
-	CardTech   *int32  `json:"card_tech,omitempty"`
-	Crypto     string  `json:"crypto"`
-	Currency   int32   `json:"currency"`
-	Info       string  `json:"info"`
-	ReceiptNr  int64   `json:"receipt_nr"`
-	TerminalId string  `json:"terminal_id"`
-	Timestamp  string  `json:"timestamp"`
-	TurnoverNr int64   `json:"turnover_nr"`
-	VuNr       string  `json:"vu_nr"`
+	Aid      string `json:"aid"`
+	Amount   int64  `json:"amount"`
+	Card     Card   `json:"card"`
+	CardTech int32  `json:"card_tech"`
+
+	// EMV-print-data (merchant-receipt)
+	Crypto      string `json:"crypto"`
+	Currency    int32  `json:"currency"`
+	EmvCustomer string `json:"emv_customer"`
+	EmvMerchant string `json:"emv_merchant"`
+	Info        string `json:"info"`
+	ReceiptNr   int64  `json:"receipt_nr"`
+	TerminalId  string `json:"terminal_id"`
+	Timestamp   string `json:"timestamp"`
+	TurnoverNr  int64  `json:"turnover_nr"`
+	VuNr        string `json:"vu_nr"`
 }
 
 // AuthoriseResult defines model for authorise_result.
@@ -46,6 +50,9 @@ const (
 
 // Card defines model for card.
 type Card struct {
+
+	// YYMM
+	Expiry     string `json:"expiry"`
 	Name       string `json:"name"`
 	PanEfId    string `json:"pan_ef_id"`
 	SequenceNr int32  `json:"sequence_nr"`

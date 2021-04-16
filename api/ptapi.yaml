@@ -224,10 +224,14 @@ components:
         type:
           type: integer
           format: int32
-          example: 0
+          example: 48
         name:
           type: string
-          example: 0
+          example: 'Mastercard'
+        expiry:
+          description: 'YYMM'
+          type: string
+          example: '2203'
         pan_ef_id:
           type: string
           example: '**** *** **** 5726'
@@ -236,6 +240,7 @@ components:
         - type
         - pan_ef_id
         - sequence_nr
+        - expiry
 
     authorise_response:
       type: object
@@ -294,10 +299,16 @@ components:
         aid:
           type: string
           example: 'A0000000041010'
+        emv_customer:
+          type: string
+        emv_merchant:
+          type: string
         info:
           type: string
           example: 'Karte abgelehnt'
         crypto:
+          description: >-
+            EMV-print-data (merchant-receipt)
           type: string
           example: 'CC0D7CBD9E02A2A'
         card:
@@ -313,7 +324,11 @@ components:
         - timestamp
         - currency
         - info
-
+        - aid
+        - emv_customer
+        - emv_merchant
+        - card_tech
+        
     auth_completion_response:
       type: object
       properties:
