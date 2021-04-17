@@ -3,7 +3,7 @@ module github.com/bezahl-online/ptapi
 go 1.16
 
 require (
-	github.com/bezahl-online/zvt v0.0.0-20210416162157-e03ab141a1bf
+	github.com/bezahl-online/zvt v0.0.0-20210417101903-44b9568d7d54
 	github.com/deepmap/oapi-codegen v1.5.1
 	github.com/getkin/kin-openapi v0.49.0
 	github.com/labstack/echo/v4 v4.2.1
