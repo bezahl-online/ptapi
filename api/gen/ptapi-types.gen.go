@@ -24,9 +24,9 @@ type AuthoriseResponseData struct {
 	Card     Card   `json:"card"`
 	CardTech int32  `json:"card_tech"`
 
+	Crypto   string `json:"crypto"`
+	Currency int32  `json:"currency"`
 	// EMV-print-data (merchant-receipt)
-	Crypto      string `json:"crypto"`
-	Currency    int32  `json:"currency"`
 	EmvCustomer string `json:"emv_customer"`
 	EmvMerchant string `json:"emv_merchant"`
 	Info        string `json:"info"`
