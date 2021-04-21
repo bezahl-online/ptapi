@@ -40,7 +40,7 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	if err != nil {
 		return err
 	}
-	time.Sleep(50 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/authorisation/%s/completion%02d", *param.TestDir, authCnt))
 	var response *api.AuthCompletionResponse = &api.AuthCompletionResponse{}
 	err = json.Unmarshal(resultJson, response)

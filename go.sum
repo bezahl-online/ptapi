@@ -4,6 +4,8 @@ github.com/albenik/bcd v0.0.0-20170831201648-635201416bc7 h1:m3Ayfs5OcAlIMEdLIQK
 github.com/albenik/bcd v0.0.0-20170831201648-635201416bc7/go.mod h1:QIAMbrwsnQZ2ES3G26RubSrDB5SPyzsp9Hts5NJdTrI=
 github.com/bezahl-online/zvt v0.0.0-20210417101903-44b9568d7d54 h1:cq4IhqvpIXEPyugvk/bD029USDWDO75bHfY0P5ihRP4=
 github.com/bezahl-online/zvt v0.0.0-20210417101903-44b9568d7d54/go.mod h1:NlpYCeFsUaOy5y0aqS+jTeP8xndZUaQF9tq9uaJ2Wd8=
+github.com/bezahl-online/zvt v0.0.0-20210421125335-96cc324b9324 h1:Ifd+c/1CKCuFvIkJwwwYwN0S0pfMYOBZMuLHovaUK7w=
+github.com/bezahl-online/zvt v0.0.0-20210421125335-96cc324b9324/go.mod h1:NlpYCeFsUaOy5y0aqS+jTeP8xndZUaQF9tq9uaJ2Wd8=
 github.com/cyberdelia/templates v0.0.0-20141128023046-ca7fffd4298c/go.mod h1:GyV+0YP4qX0UQ7r2MoYZ+AvYDp12OF5yg4q8rGnyNh4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
