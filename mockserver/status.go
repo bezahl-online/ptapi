@@ -13,32 +13,31 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Register returns status ok
-func (a *API) Register(ctx echo.Context) error {
+// Status returns status ok
+func (a *API) Status(ctx echo.Context) error {
 	if err := SendStatus(ctx, http.StatusOK, "OK"); err != nil {
 		return err
 	}
 	return nil
 }
 
-// RegisterCompletion completes the register transaction
-// and responses with the transaction's data
-func (a *API) RegisterCompletion(ctx echo.Context) error {
+// StatusCompletion completes the status enquiry
+func (a *API) StatusCompletion(ctx echo.Context) error {
 	authCnt++
-	var request api.RegisterJSONRequestBody
+	var request api.StatusJSONRequestBody
 	err := ctx.Bind(&request)
 	if err != nil {
 		return err
 	}
 	time.Sleep(50 * time.Millisecond)
-	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/register/%s/completion%02d", *param.TestDir, authCnt))
-	var response *api.RegisterCompletionResponse = &api.RegisterCompletionResponse{}
+	resultJson, _ := ioutil.ReadFile(fmt.Sprintf("mockserver/status/%s/completion%02d", *param.TestDir, authCnt))
+	var response *api.StatusCompletionResponse = &api.StatusCompletionResponse{}
 	err = json.Unmarshal(resultJson, response)
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 	ctx.JSON(http.StatusOK, response)
-	fmt.Printf("RegisterCompetion result: %+v\n", *response.Transaction)
+	fmt.Printf("StatusCompetion result: %+v\n", *response.Transaction)
 	return nil
 }

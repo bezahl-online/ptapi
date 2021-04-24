@@ -24,9 +24,9 @@ type AuthoriseResponseData struct {
 	Card     Card   `json:"card"`
 	CardTech int32  `json:"card_tech"`
 
-	Crypto   string `json:"crypto"`
-	Currency int32  `json:"currency"`
 	// EMV-print-data (merchant-receipt)
+	Crypto      string `json:"crypto"`
+	Currency    int32  `json:"currency"`
 	EmvCustomer string `json:"emv_customer"`
 	EmvMerchant string `json:"emv_merchant"`
 	Info        string `json:"info"`
@@ -77,13 +77,9 @@ type EndOfDayResponse struct {
 type EndOfDayResponseData struct {
 	SingleTotals SingleTotals `json:"single_totals"`
 
-	// YYYY-MM-DD hh:mm:ss
-	Timestamp string `json:"timestamp"`
-	Total     int64  `json:"total"`
-	Tracenr   int64  `json:"tracenr"`
-
-	// unix utc timestamp
-	UtcTime int64 `json:"utc_time"`
+	// seconds since Jan 01 1970. (UTC)
+	Timestamp Timestamp `json:"timestamp"`
+	Total     int64     `json:"total"`
 }
 
 // EndOfDayResult defines model for end_of_day_result.
@@ -151,6 +147,33 @@ type Status struct {
 	Message string `json:"message"`
 }
 
+// StatusCompletionResponse defines model for status_completion_response.
+type StatusCompletionResponse struct {
+	Message     string                 `json:"message"`
+	Status      int32                  `json:"status"`
+	Transaction *StatusEnquiryResponse `json:"transaction,omitempty"`
+}
+
+// StatusEnquiryResponse defines model for status_enquiry_response.
+type StatusEnquiryResponse struct {
+	Error  string       `json:"error"`
+	Result StatusResult `json:"result"`
+}
+
+// StatusResult defines model for status_result.
+type StatusResult string
+
+// List of StatusResult
+const (
+	StatusResult_abort   StatusResult = "abort"
+	StatusResult_pending StatusResult = "pending"
+	StatusResult_success StatusResult = "success"
+	StatusResult_timeout StatusResult = "timeout"
+)
+
+// Timestamp defines model for timestamp.
+type Timestamp int64
+
 // Statusresponse defines model for statusresponse.
 type Statusresponse Status
 
@@ -177,6 +200,11 @@ type RegisterJSONBody struct {
 	Option *string `json:"option,omitempty"`
 }
 
+// StatusJSONBody defines parameters for Status.
+type StatusJSONBody struct {
+	Option *string `json:"option,omitempty"`
+}
+
 // AuthoriseJSONRequestBody defines body for Authorise for application/json ContentType.
 type AuthoriseJSONRequestBody AuthoriseJSONBody
 
@@ -188,3 +216,6 @@ type DisplayTextJSONRequestBody DisplayTextJSONBody
 
 // RegisterJSONRequestBody defines body for Register for application/json ContentType.
 type RegisterJSONRequestBody RegisterJSONBody
+
+// StatusJSONRequestBody defines body for Status for application/json ContentType.
+type StatusJSONRequestBody StatusJSONBody

@@ -26,6 +26,9 @@ func TestAuthorise(t *testing.T) {
 func TestAuthoriseCompletion(t *testing.T) {
 	skipShort(t)
 	TestAuthorise(t)
+	if t.Failed() {
+		return
+	}
 	request := AuthoriseCompletionJSONBody{
 		ReceiptCode: "12345",
 	}
@@ -103,6 +106,8 @@ func TestParseAuthResult(t *testing.T) {
 			},
 		},
 	}
-	got := parseAuthResult(result)
-	assert.EqualValues(t, want, *got)
+	got, err := parseAuthResult(result)
+	if assert.NoError(t, err) {
+		assert.EqualValues(t, want, *got)
+	}
 }

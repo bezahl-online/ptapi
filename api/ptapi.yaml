@@ -137,6 +137,41 @@ paths:
         '400':
           $ref: '#/components/responses/statusresponse'
 
+  /status:
+    post:
+      operationId: status
+      requestBody:
+        description: >-
+          send status enquiry to PT 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                option:
+                  type: string
+                  example: "maybe later"
+
+      responses:
+        '200':
+          $ref: '#/components/responses/statusresponse'
+        '400':
+          $ref: '#/components/responses/statusresponse'
+
+  /status_completion:
+     post:
+      operationId: statusCompletion
+
+      responses:
+        '200':
+          description: response of successful initiation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status_completion_response'
+        '400':
+          $ref: '#/components/responses/statusresponse'
+
 
   /abort:
     post:
@@ -386,19 +421,8 @@ components:
     end_of_day_response_data:
       type: object
       properties:
-        tracenr:
-          type: integer
-          format: int64
-          example: 1234
         timestamp:
-          description: YYYY-MM-DD hh:mm:ss
-          type: string
-          example:   "2021-03-31 17:05:21"
-        utc_time:
-          description: unix utc timestamp
-          type: integer
-          format: int64
-          example: 1608358936
+          $ref: '#/components/schemas/timestamp'
         total:
           type: integer
           format: int64
@@ -517,3 +541,45 @@ components:
       required:
         - status
         - message
+    
+    status_result:
+      type: string
+      enum:
+        - 'pending'
+        - 'success'
+        - 'timeout'
+        - 'abort'    
+    
+    status_enquiry_response:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "timeout"
+        result:
+          $ref: '#/components/schemas/status_result'
+      required:
+        - error
+        - result
+
+    status_completion_response:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 1
+        message:
+          type: string
+          example: 'please wait'
+        transaction:
+          $ref: '#/components/schemas/status_enquiry_response'
+      required:
+        - status
+        - message
+
+    timestamp:
+      description: seconds since Jan 01 1970. (UTC)
+      type: integer
+      format: int64
+      example: 1608358936

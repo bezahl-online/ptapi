@@ -81,9 +81,8 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionRespon
 						TotalOther:     new(int64),
 						TotalVisa:      new(int64),
 					},
-					Timestamp: "",
+					Timestamp: 1619284448,
 					Total:     zvtT.Data.Total,
-					Tracenr:   int64(zvtT.Data.TraceNr),
 				}
 				if zvtT.Data.Totals != nil {
 					totals := t.Data.SingleTotals
@@ -106,16 +105,10 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionRespon
 					*totals.TotalOther = int64(zT.TotalOther)
 				}
 				var err error
-				t.Data.Timestamp, err =
-					compileTimestamp(zvtT.Data.Date, zvtT.Data.Time)
+				t.Data.Timestamp, err = unmarshalTimestamp(*zvtT.Data)
 				if err != nil {
 					return nil, err
 				}
-				// tt, err := time.Parse("", t.Data.Timestamp) // FIXME
-				// if err != nil {
-				// 	return nil, err
-				// }
-				// t.Data.UtcTime = tt.UTC().Unix()
 			}
 			response.Transaction = &t
 		default:
@@ -124,6 +117,35 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionRespon
 		response.Transaction = &t
 	}
 	return &response, nil
+}
+
+func unmarshalTimestamp(data zvt.EoDResultData) (Timestamp, error) {
+	Y := time.Now().Year()
+	M, err := strconv.Atoi(data.Date[:2])
+	if err != nil {
+		return 0, err
+	}
+	d, err := strconv.Atoi(data.Date[2:])
+	if err != nil {
+		return 0, err
+	}
+	h, err := strconv.Atoi(data.Time[:2])
+	if err != nil {
+		return 0, err
+	}
+	m, err := strconv.Atoi(data.Time[2:4])
+	if err != nil {
+		return 0, err
+	}
+	s, err := strconv.Atoi(data.Time[4:])
+	if err != nil {
+		return 0, err
+	}
+	timestamp, err := getUNIXUTCFor("Europe/Vienna", Y, M, d, h, m, s)
+	if err != nil {
+		return 0, err
+	}
+	return timestamp, nil
 }
 
 func compileTimestamp(date, timeStr string) (string, error) {

@@ -20,6 +20,9 @@ func TestEndOfDay(t *testing.T) {
 func TestEndOfDayCompletion(t *testing.T) {
 	skipShort(t)
 	TestEndOfDay(t)
+	if t.Failed() {
+		return
+	}
 	for {
 		result := testutil.NewRequest().Post("/endofday_completion").WithAcceptJson().Go(t, e)
 		if assert.Equal(t, http.StatusOK, result.Code()) {
@@ -64,10 +67,8 @@ func TestParseEndOfDayResult(t *testing.T) {
 					TotalOther:     new(int64),
 					TotalVisa:      new(int64),
 				},
-				Timestamp: "2021-04-01 12:30:15",
-				UtcTime:   0,
+				Timestamp: 1617273015,
 				Total:     356600,
-				Tracenr:   12345678,
 			},
 			Error:  "",
 			Result: "pending",
@@ -99,10 +100,9 @@ func TestParseEndOfDayResult(t *testing.T) {
 			Error:  "",
 			Result: "pending",
 			Data: &zvt.EoDResultData{
-				TraceNr: 12345678,
-				Date:    "0401",
-				Time:    "123015",
-				Total:   356600,
+				Date:  "0401",
+				Time:  "123015",
+				Total: 356600,
 				Totals: &zvt.SingleTotals{
 					ReceiptNrStart: 123,
 					ReceiptNrEnd:   134,

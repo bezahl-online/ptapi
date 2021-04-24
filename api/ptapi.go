@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	. "github.com/bezahl-online/ptapi/api/gen"
 	zvt "github.com/bezahl-online/zvt/command"
@@ -56,4 +57,22 @@ func SendError(ctx echo.Context, code int, message string) error {
 		return err
 	}
 	return fmt.Errorf(status.Message)
+}
+
+func getUNIXUTCFor(locationName string, Y, M, d, h, m, s int) (Timestamp, error) {
+	location, err := time.LoadLocation(locationName)
+	if err != nil {
+		return 0, err
+	}
+	_, offset := time.Now().In(location).Zone()
+	hours := int(offset / 3600)
+	minutes := int((offset - 3600*hours) / 60)
+	t, err := time.Parse(time.RFC3339,
+		fmt.Sprintf("%4d-%02d-%02dT%02d:%02d:%02d+%s",
+			Y, M, d, h, m, s,
+			fmt.Sprintf("%02d:%02d", hours, minutes)))
+	if err != nil {
+		return 0, err
+	}
+	return Timestamp(t.UTC().Unix()), nil
 }

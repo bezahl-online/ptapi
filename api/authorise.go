@@ -46,7 +46,10 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	if err := zvt.PaymentTerminal.Completion(response); err != nil {
 		return err
 	}
-	resp := parseAuthResult(*response)
+	resp, err := parseAuthResult(*response)
+	if err != nil {
+		return err
+	}
 	ctx.JSON(http.StatusOK, resp)
 	// authCnt++
 	// jsonResp, _ := json.Marshal(resp)
@@ -56,46 +59,49 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	return nil
 }
 
-func parseAuthResult(result zvt.AuthorisationResponse) *AuthCompletionResponse {
+func parseAuthResult(result zvt.AuthorisationResponse) (*AuthCompletionResponse, error) {
 	var response AuthCompletionResponse = AuthCompletionResponse{}
 	response.Status = int32(result.Status)
 	if len(result.Message) > 0 {
 		response.Message = result.Message
 	}
-	if result.Transaction != nil {
-		zvtT := *result.Transaction
-		t := AuthoriseResponse{}
-		switch zvtT.Result {
-		case zvt.Result_Success:
-			t.Result = AuthoriseResult_success
-		case zvt.Result_Abort:
-			t.Result = AuthoriseResult_abort
-		case zvt.Result_Pending:
-			t.Result = AuthoriseResult_pending
-			if zvtT.Data != nil {
-				d := *zvtT.Data
-				t.Data = &AuthoriseResponseData{
-					Aid:         d.AID,
-					Currency:    int32(d.Currency),
-					Amount:      d.Amount,
-					Card:        Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
-					CardTech:    int32(d.Card.Tech),
-					Crypto:      "",
-					EmvCustomer: d.EMVCustomer,
-					EmvMerchant: d.EMVMerchant,
-					ReceiptNr:   int64(d.ReceiptNr),
-					TerminalId:  d.TID,
-					Timestamp:   d.Date + " " + d.Time,
-					TurnoverNr:  int64(d.TurnoverNr),
-					Info:        d.Info,
-					VuNr:        d.VU,
-				}
-			}
-			response.Transaction = &t
-		default:
-			t.Error = "no result"
-		}
-		response.Transaction = &t
+	if result.Transaction == nil || (*result.Transaction).Data == nil {
+		return nil, fmt.Errorf("no transaction data in result")
 	}
-	return &response
+	zvtT := *result.Transaction
+	t := AuthoriseResponse{}
+	switch zvtT.Result {
+	case zvt.Result_Success:
+		t.Result = AuthoriseResult_success
+	case zvt.Result_Abort:
+		t.Result = AuthoriseResult_abort
+	case zvt.Result_Pending:
+		response.Transaction = &t
+		t.Result = AuthoriseResult_pending
+		if zvtT.Data == nil || zvtT.Data.Amount == 0 {
+			break
+		}
+		d := *zvtT.Data
+		t.Data = &AuthoriseResponseData{
+			Aid:         d.AID,
+			Currency:    int32(d.Currency),
+			Amount:      d.Amount,
+			Card:        Card{Name: d.Card.Name, PanEfId: d.Card.PAN, SequenceNr: int32(d.Card.SeqNr), Type: int32(d.Card.Type)},
+			CardTech:    int32(d.Card.Tech),
+			Crypto:      "",
+			EmvCustomer: d.EMVCustomer,
+			EmvMerchant: d.EMVMerchant,
+			ReceiptNr:   int64(d.ReceiptNr),
+			TerminalId:  d.TID,
+			Timestamp:   d.Date + " " + d.Time,
+			TurnoverNr:  int64(d.TurnoverNr),
+			Info:        d.Info,
+			VuNr:        d.VU,
+		}
+	default:
+		t.Error = "no result"
+	}
+	response.Transaction = &t
+
+	return &response, nil
 }
