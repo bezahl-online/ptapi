@@ -14,7 +14,7 @@ type AuthCompletionResponse struct {
 type AuthoriseResponse struct {
 	Data   *AuthoriseResponseData `json:"data,omitempty"`
 	Error  string                 `json:"error"`
-	Result AuthoriseResult        `json:"result"`
+	Result PtResult               `json:"result"`
 }
 
 // AuthoriseResponseData defines model for authorise_response_data.
@@ -36,17 +36,6 @@ type AuthoriseResponseData struct {
 	TurnoverNr  int64  `json:"turnover_nr"`
 	VuNr        string `json:"vu_nr"`
 }
-
-// AuthoriseResult defines model for authorise_result.
-type AuthoriseResult string
-
-// List of AuthoriseResult
-const (
-	AuthoriseResult_abort   AuthoriseResult = "abort"
-	AuthoriseResult_pending AuthoriseResult = "pending"
-	AuthoriseResult_success AuthoriseResult = "success"
-	AuthoriseResult_timeout AuthoriseResult = "timeout"
-)
 
 // Card defines model for card.
 type Card struct {
@@ -70,7 +59,7 @@ type EndOfDayCompletionResponse struct {
 type EndOfDayResponse struct {
 	Data   *EndOfDayResponseData `json:"data,omitempty"`
 	Error  string                `json:"error"`
-	Result EndOfDayResult        `json:"result"`
+	Result PtResult              `json:"result"`
 }
 
 // EndOfDayResponseData defines model for end_of_day_response_data.
@@ -82,15 +71,17 @@ type EndOfDayResponseData struct {
 	Total     int64     `json:"total"`
 }
 
-// EndOfDayResult defines model for end_of_day_result.
-type EndOfDayResult string
+// PtResult defines model for pt_result.
+type PtResult string
 
-// List of EndOfDayResult
+// List of PtResult
 const (
-	EndOfDayResult_abort   EndOfDayResult = "abort"
-	EndOfDayResult_pending EndOfDayResult = "pending"
-	EndOfDayResult_success EndOfDayResult = "success"
-	EndOfDayResult_timeout EndOfDayResult = "timeout"
+	PtResult_abort           PtResult = "abort"
+	PtResult_need_end_of_day PtResult = "need_end_of_day"
+	PtResult_pending         PtResult = "pending"
+	PtResult_success         PtResult = "success"
+	PtResult_timeout         PtResult = "timeout"
+	PtResult_software_update PtResult = "software_update"
 )
 
 // RegisterCompletionResponse defines model for register_completion_response.
@@ -102,20 +93,9 @@ type RegisterCompletionResponse struct {
 
 // RegisterResponse defines model for register_response.
 type RegisterResponse struct {
-	Error  string         `json:"error"`
-	Result RegisterResult `json:"result"`
+	Error  string   `json:"error"`
+	Result PtResult `json:"result"`
 }
-
-// RegisterResult defines model for register_result.
-type RegisterResult string
-
-// List of RegisterResult
-const (
-	RegisterResult_abort   RegisterResult = "abort"
-	RegisterResult_pending RegisterResult = "pending"
-	RegisterResult_success RegisterResult = "success"
-	RegisterResult_timeout RegisterResult = "timeout"
-)
 
 // SingleTotals defines model for single_totals.
 type SingleTotals struct {
@@ -156,20 +136,9 @@ type StatusCompletionResponse struct {
 
 // StatusEnquiryResponse defines model for status_enquiry_response.
 type StatusEnquiryResponse struct {
-	Error  string       `json:"error"`
-	Result StatusResult `json:"result"`
+	Error  string   `json:"error"`
+	Result PtResult `json:"result"`
 }
-
-// StatusResult defines model for status_result.
-type StatusResult string
-
-// List of StatusResult
-const (
-	StatusResult_abort   StatusResult = "abort"
-	StatusResult_pending StatusResult = "pending"
-	StatusResult_success StatusResult = "success"
-	StatusResult_timeout StatusResult = "timeout"
-)
 
 // Timestamp defines model for timestamp.
 type Timestamp int64

@@ -41,8 +41,8 @@ func TestAuthoriseCompletion(t *testing.T) {
 				response.Message, (*response.Transaction).Result, (*response.Transaction).Data)
 			if response != nil &&
 				response.Transaction != nil &&
-				response.Transaction.Result == AuthoriseResult_abort ||
-				response.Transaction.Result == AuthoriseResult_success {
+				response.Transaction.Result == PtResult_abort ||
+				response.Transaction.Result == PtResult_success {
 				break
 			}
 			if assert.NoError(t, err) {

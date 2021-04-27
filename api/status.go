@@ -61,11 +61,11 @@ func parseStatusResult(result zvt.StatusResponse) *StatusCompletionResponse {
 		t := StatusEnquiryResponse{}
 		switch zvtT.Result {
 		case zvt.Result_Success:
-			t.Result = StatusResult_success
+			t.Result = PtResult_success
 		case zvt.Result_Abort:
-			t.Result = StatusResult_abort
+			t.Result = PtResult_abort
 		case zvt.Result_Pending:
-			t.Result = StatusResult_pending
+			t.Result = PtResult_pending
 			if zvtT.Data != nil {
 				log.Println("there is data to be parsed")
 			}

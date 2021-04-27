@@ -74,11 +74,11 @@ func parseRegisterResult(result zvt.RegisterResponse) *RegisterCompletionRespons
 		t := RegisterResponse{}
 		switch zvtT.Result {
 		case zvt.Result_Success:
-			t.Result = RegisterResult_success
+			t.Result = PtResult_success
 		case zvt.Result_Abort:
-			t.Result = RegisterResult_abort
+			t.Result = PtResult_abort
 		case zvt.Result_Pending:
-			t.Result = RegisterResult_pending
+			t.Result = PtResult_pending
 			if zvtT.Data != nil {
 				log.Println("there is data to be parsed")
 				// d := *zvtT.Data

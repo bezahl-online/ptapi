@@ -32,8 +32,8 @@ func TestEndOfDayCompletion(t *testing.T) {
 				response.Message, (*response.Transaction).Result, (*response.Transaction).Data)
 			if response != nil &&
 				response.Transaction != nil &&
-				response.Transaction.Result == EndOfDayResult_abort ||
-				response.Transaction.Result == EndOfDayResult_success {
+				response.Transaction.Result == PtResult_abort ||
+				response.Transaction.Result == PtResult_success {
 				break
 			}
 			if assert.NoError(t, err) {

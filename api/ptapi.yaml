@@ -284,19 +284,20 @@ components:
           type: string
           example: "timeout"
         result:
-          $ref: '#/components/schemas/authorise_result'
+          $ref: '#/components/schemas/pt_result'
         data:
           $ref: '#/components/schemas/authorise_response_data'
       required:
         - error
         - result
 
-    authorise_result:
+    pt_result:
       type: string
       enum:
         - 'pending'
         - 'success'
         - 'timeout'
+        - 'need_end_of_day'
         - 'abort'
 
     authorise_response_data:
@@ -403,20 +404,12 @@ components:
           type: string
           example: "timeout"
         result:
-          $ref: '#/components/schemas/end_of_day_result'
+          $ref: '#/components/schemas/pt_result'
         data:
           $ref: '#/components/schemas/end_of_day_response_data'
       required:
         - error
         - result
-
-    end_of_day_result:
-      type: string
-      enum:
-        - 'pending'
-        - 'success'
-        - 'timeout'
-        - 'abort'
 
     end_of_day_response_data:
       type: object
@@ -504,14 +497,6 @@ components:
           format: int64
           example: 0
 
-    register_result:
-      type: string
-      enum:
-        - 'pending'
-        - 'success'
-        - 'timeout'
-        - 'abort'    
-    
     register_response:
       type: object
       properties:
@@ -519,7 +504,7 @@ components:
           type: string
           example: "timeout"
         result:
-          $ref: '#/components/schemas/register_result'
+          $ref: '#/components/schemas/pt_result'
       #  data:
       #    $ref: '#/components/schemas/register_response_data'
       required:
@@ -542,14 +527,6 @@ components:
         - status
         - message
     
-    status_result:
-      type: string
-      enum:
-        - 'pending'
-        - 'success'
-        - 'timeout'
-        - 'abort'    
-    
     status_enquiry_response:
       type: object
       properties:
@@ -557,7 +534,7 @@ components:
           type: string
           example: "timeout"
         result:
-          $ref: '#/components/schemas/status_result'
+          $ref: '#/components/schemas/pt_result'
       required:
         - error
         - result

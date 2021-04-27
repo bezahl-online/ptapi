@@ -56,11 +56,11 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionRespon
 		t := EndOfDayResponse{}
 		switch zvtT.Result {
 		case zvt.Result_Success:
-			t.Result = EndOfDayResult_success
+			t.Result = PtResult_success
 		case zvt.Result_Abort:
-			t.Result = EndOfDayResult_abort
+			t.Result = PtResult_abort
 		case zvt.Result_Pending:
-			t.Result = EndOfDayResult_pending
+			t.Result = PtResult_pending
 			if zvtT.Data != nil {
 				t.Data = &EndOfDayResponseData{
 					SingleTotals: SingleTotals{
