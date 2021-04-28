@@ -43,6 +43,12 @@ func (a *API) AuthoriseCompletion(ctx echo.Context) error {
 	Logger.Info(fmt.Sprintf("authorise completion for receipt %s",
 		request.ReceiptCode))
 	var response *zvt.AuthorisationResponse = &zvt.AuthorisationResponse{}
+	// 	TransactionResponse: zvt.TransactionResponse{},
+	// 	Transaction: &zvt.AuthResult{
+	// 		Error:  "",
+	// 		Result: string(PtResult_pending),
+	// 	},
+	// }
 	if err := zvt.PaymentTerminal.Completion(response); err != nil {
 		return err
 	}
@@ -66,7 +72,7 @@ func parseAuthResult(result zvt.AuthorisationResponse) (*AuthCompletionResponse,
 		response.Message = result.Message
 	}
 	t := AuthoriseResponse{}
-	if result.Transaction != nil && (*result.Transaction).Data != nil {
+	if result.Transaction != nil {
 		zvtT := *result.Transaction
 		switch zvtT.Result {
 		case zvt.Result_Success:
