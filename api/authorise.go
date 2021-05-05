@@ -27,6 +27,9 @@ func (a *API) Authorise(ctx echo.Context) error {
 		if strings.Contains(err.Error(), "connect") {
 			status = http.StatusServiceUnavailable
 		}
+		if strings.Contains(err.Error(), "84 83") {
+			return SendStatus(ctx, http.StatusConflict, "")
+		}
 		return SendError(ctx, status, fmt.Sprintf("Authorise returns error: %s", err.Error()))
 	}
 	// authCnt = 0
