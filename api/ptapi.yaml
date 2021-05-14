@@ -414,6 +414,10 @@ components:
     end_of_day_response_data:
       type: object
       properties:
+        register_id:
+          type: integer
+          format: int32
+          example: 708341        
         timestamp:
           $ref: '#/components/schemas/timestamp'
         total:
@@ -423,9 +427,8 @@ components:
         single_totals:
           $ref: '#/components/schemas/single_totals'
       required:
-        - tracenr
+        - register_id
         - timestamp
-        - utc_time
         - total
         - single_totals
 

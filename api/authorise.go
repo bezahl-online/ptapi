@@ -21,7 +21,9 @@ func (a *API) Authorise(ctx echo.Context) error {
 	}
 	Logger.Info(fmt.Sprintf("request authorise %d for receipt %s",
 		request.Amount, request.ReceiptCode))
-	// FIXME: handle lost connection
+	if err := zvt.PaymentTerminal.ReConnect(); err != nil {
+		Logger.Error(err.Error())
+	}
 	if err := zvt.PaymentTerminal.Authorisation(&zvt.AuthConfig{Amount: request.Amount}); err != nil {
 		status := http.StatusInternalServerError
 		if strings.Contains(err.Error(), "connect") {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -34,6 +35,9 @@ func (a *API) EndOfDayCompletion(ctx echo.Context) error {
 	if err := json.Unmarshal(resultJson, response); err != nil {
 		return err
 	}
-	ctx.JSON(http.StatusOK, response)
+	err := ctx.JSON(http.StatusOK, response)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return nil
 }

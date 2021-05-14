@@ -64,6 +64,7 @@ type EndOfDayResponse struct {
 
 // EndOfDayResponseData defines model for end_of_day_response_data.
 type EndOfDayResponseData struct {
+	RegisterId   int32        `json:"register_id"`
 	SingleTotals SingleTotals `json:"single_totals"`
 
 	// seconds since Jan 01 1970. (UTC)
@@ -81,7 +82,6 @@ const (
 	PtResult_pending         PtResult = "pending"
 	PtResult_success         PtResult = "success"
 	PtResult_timeout         PtResult = "timeout"
-	PtResult_software_update PtResult = "software_update"
 )
 
 // RegisterCompletionResponse defines model for register_completion_response.

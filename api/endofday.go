@@ -81,8 +81,9 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionRespon
 						TotalOther:     new(int64),
 						TotalVisa:      new(int64),
 					},
-					Timestamp: 1619284448,
-					Total:     zvtT.Data.Total,
+					Timestamp:  1619284448,
+					Total:      zvtT.Data.Total,
+					RegisterId: 0,
 				}
 				if zvtT.Data.Totals != nil {
 					totals := t.Data.SingleTotals
@@ -104,10 +105,13 @@ func parseEndOfDayResult(result zvt.EndOfDayResponse) (*EndOfDayCompletionRespon
 					*totals.CountOther = int64(zT.CountOther)
 					*totals.TotalOther = int64(zT.TotalOther)
 				}
-				var err error
-				t.Data.Timestamp, err = unmarshalTimestamp(*zvtT.Data)
-				if err != nil {
-					return nil, err
+				data := *&zvtT.Data
+				if data != nil && len(data.Date) == 4 && len(data.Time) == 6 {
+					var err error
+					t.Data.Timestamp, err = unmarshalTimestamp(*zvtT.Data)
+					if err != nil {
+						Logger.Error(fmt.Sprintf("error while unmarshalTimestamp: %s", err.Error()))
+					}
 				}
 			}
 			response.Transaction = &t
