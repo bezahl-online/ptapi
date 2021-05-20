@@ -15,6 +15,8 @@ import (
 
 // Register returns status ok
 func (a *API) Register(ctx echo.Context) error {
+	authCnt = 0
+
 	if err := SendStatus(ctx, http.StatusOK, "OK"); err != nil {
 		return err
 	}

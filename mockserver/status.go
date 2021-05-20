@@ -15,6 +15,7 @@ import (
 
 // Status returns status ok
 func (a *API) Status(ctx echo.Context) error {
+	authCnt = 0
 	if err := SendStatus(ctx, http.StatusOK, "OK"); err != nil {
 		return err
 	}
