@@ -23,6 +23,8 @@ WORKDIR /ptapi
 # need to build like this:
 # $ CGO_ENABLED=0 go build -o ptapiserver
 ADD ptapiserver .
+ADD localhost.crt .
+ADD localhost.key .
 
 # Build the application
 #RUN go build -o server .
