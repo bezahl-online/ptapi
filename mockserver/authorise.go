@@ -17,7 +17,7 @@ import (
 func (a *API) Authorise(ctx echo.Context) error {
 	var err error
 	var request api.AuthoriseJSONRequestBody
-	authCnt = 0
+	authCnt = 9
 	err = ctx.Bind(&request)
 	if err != nil {
 		return err
