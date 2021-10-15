@@ -4,7 +4,7 @@ services:
   ptapiserver:
     build: .
     restart: always
-    image: "bezahlonline/ptapiserver"
+    image: "www.greisslomat.at:5000/ptapiserver"
     ports:
       - "8060:8060"
     volumes:
