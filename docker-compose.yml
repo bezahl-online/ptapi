@@ -10,4 +10,4 @@ services:
     volumes:
       - /var/log/zvt:/var/log/zvt
     extra_hosts:
-      - "pt:192.168.30.162"
+      - "pt:${PT_ADDR}"
