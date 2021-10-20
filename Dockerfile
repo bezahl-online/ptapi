@@ -25,7 +25,8 @@ WORKDIR /ptapi
 ADD ptapiserver .
 ADD localhost.crt .
 ADD localhost.key .
-
+ADD https://github.com/golang/go/raw/master/lib/time/zoneinfo.zip /zoneinfo.zip
+ENV ZONEINFO /zoneinfo.zip
 # Build the application
 #RUN go build -o server .
 
