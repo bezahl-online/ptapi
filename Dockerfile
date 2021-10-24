@@ -7,7 +7,8 @@ ENV GO111MODULE=on \
     GOARCH=amd64\
     ZVT_URL=pt:20007 \
     ZVT_LOGFILEPATH=/var/log/zvt\
-    ZVT_DUMPFILEPATH=/var/log/zvt/dump
+    ZVT_DUMPFILEPATH=/var/log/zvt/dump \
+    PRODUCTIVE=YES
 
 #RUN apk update && apk upgrade && \
 #    apk add --no-cache bash git openssh
