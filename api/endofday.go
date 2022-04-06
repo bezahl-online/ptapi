@@ -19,6 +19,9 @@ import (
 func (a *API) EndOfDay(ctx echo.Context) error {
 	Logger.Info("request end of day")
 	// authCnt = 0
+	if err := zvt.PaymentTerminal.ReConnect(); err != nil {
+		Logger.Error(err.Error())
+	}
 	if err := zvt.PaymentTerminal.EndOfDay(); err != nil {
 		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("EndOfDay returns error: %s", err.Error()))
 	}
