@@ -1,3 +1,6 @@
+# build using 
+# nix-build -E 'let pkgs = import <nixpkgs> { }; in pkgs.callPackage ./default.nix {}'
+#
 { lib
 , buildGoModule
 , nixosTests
@@ -10,6 +13,7 @@ let
   repo = "ptapi";
   rev = "v${version}";
   sha256 = "1ikyp1rxrl8lyfbll501f13yir1axighnr8x3ji3qzwin6i3w497";
+  vendorHash = null;
 in
 buildGoModule {
   pname = "ptapiserver";
@@ -17,8 +21,7 @@ buildGoModule {
 
   src = ./.;
  
-  vendorSha256 = "";
-
+  vendorHash = null;
   buildPhase = ''
     runHook preBuild
     CGO_ENABLED=0 go build -o ptapiserver .
