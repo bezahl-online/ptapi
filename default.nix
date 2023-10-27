@@ -3,6 +3,7 @@
 #
 { lib
 , buildGoModule
+, fetchFromGitHub
 , nixosTests
 , testers
 , installShellFiles
@@ -10,16 +11,22 @@
 let
   version = "1.0.1";
   owner = "bezahl-online";
+  pname = "PT API Server";
   repo = "ptapi";
   rev = "v${version}";
   sha256 = "1ikyp1rxrl8lyfbll501f13yir1axighnr8x3ji3qzwin6i3w497";
   vendorHash = null;
 in
 buildGoModule {
-  pname = "ptapiserver";
-  inherit version;
+  inherit version repo pname;
 
-  src = ./.;
+  src = fetchFromGitHub {
+    owner = "bezahl-online";
+    repo = repo;
+    rev = "ed74bc9a06a7091929667c5d9c25ec344a6589c7";
+    sha256 = "sha256-IcvPpeI09uhqDkcGo3XAJoKLJM9lrVqIyTQrjkiABWE=";
+  };
+  # src = ../${repo}/.;
  
   vendorHash = null;
   buildPhase = ''
